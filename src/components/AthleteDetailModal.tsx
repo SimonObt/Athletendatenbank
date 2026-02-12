@@ -56,13 +56,14 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
     }
   };
 
-  // Simple line chart component
+  // BUG-4 Fix: Simple line chart component with tooltip
   const PointsChart = ({ data }: { data: { date: string; cumulativePoints: number; tournamentName: string }[] }) => {
     if (data.length < 2) return null;
     
     const maxPoints = Math.max(...data.map(d => d.cumulativePoints), 1);
     const width = 100;
     const height = 40;
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     
     const points = data.map((d, i) => {
       const x = (i / (data.length - 1)) * width;
@@ -74,7 +75,12 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
       <div className="bg-gray-50 rounded-lg p-4">
         <h4 className="text-sm font-medium text-gray-700 mb-3">Punkteentwicklung</h4>
         <div className="relative h-32">
-          <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full" preserveAspectRatio="none">
+          <svg 
+            viewBox={`0 0 ${width} ${height}`} 
+            className="w-full h-full" 
+            preserveAspectRatio="none"
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
             {/* Grid lines */}
             <line x1="0" y1={height * 0.25} x2={width} y2={height * 0.25} stroke="#e5e7eb" strokeWidth="0.2" />
             <line x1="0" y1={height * 0.5} x2={width} y2={height * 0.5} stroke="#e5e7eb" strokeWidth="0.2" />
@@ -88,18 +94,31 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
               points={points}
             />
             
-            {/* Points */}
+            {/* Points with hover */}
             {data.map((d, i) => {
               const x = (i / (data.length - 1)) * width;
               const y = height - (d.cumulativePoints / maxPoints) * height;
+              const isHovered = hoveredIndex === i;
               return (
-                <circle
-                  key={i}
-                  cx={x}
-                  cy={y}
-                  r="1.5"
-                  fill="#3b82f6"
-                />
+                <g key={i}>
+                  {/* Invisible hit area for easier hovering */}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r="4"
+                    fill="transparent"
+                    onMouseEnter={() => setHoveredIndex(i)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  {/* Visible point */}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={isHovered ? "2.5" : "1.5"}
+                    fill={isHovered ? "#1d4ed8" : "#3b82f6"}
+                    style={{ transition: 'all 0.2s' }}
+                  />
+                </g>
               );
             })}
           </svg>
@@ -110,6 +129,15 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
             <span>{Math.round(maxPoints / 2)}</span>
             <span>0</span>
           </div>
+          
+          {/* BUG-4 Fix: Tooltip */}
+          {hoveredIndex !== null && (
+            <div className="absolute top-0 right-0 bg-gray-800 text-white text-xs rounded px-2 py-1 pointer-events-none z-10 shadow-lg">
+              <div className="font-medium">{data[hoveredIndex].tournamentName}</div>
+              <div className="text-gray-300">{new Date(data[hoveredIndex].date).toLocaleDateString('de-DE')}</div>
+              <div className="text-blue-300">{data[hoveredIndex].cumulativePoints} Punkte</div>
+            </div>
+          )}
         </div>
         <div className="mt-2 text-xs text-gray-500 text-center">
           Kumulierte Punkte über {data.length} Turniere

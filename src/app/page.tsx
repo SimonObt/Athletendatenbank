@@ -167,13 +167,19 @@ export default function Home() {
     }
   }, [selectedTournamentId, resultsView, getResultsByTournament]);
 
-  // Load ranking when filters change
+  // BUG-2 Fix: Load ranking when filters change (with debouncing)
   useEffect(() => {
     setIsLoadingRanking(true);
-    getRanking(rankingFilters).then(data => {
-      setRanking(data);
-      setIsLoadingRanking(false);
-    });
+    
+    // 500ms debounce to prevent rapid re-renders
+    const timeoutId = setTimeout(() => {
+      getRanking(rankingFilters).then(data => {
+        setRanking(data);
+        setIsLoadingRanking(false);
+      });
+    }, 500);
+    
+    return () => clearTimeout(timeoutId);
   }, [rankingFilters, getRanking]);
 
   // Loading state

@@ -603,6 +603,19 @@ export async function getRanking(filters: RankingFilters): Promise<RankingEntry[
       })
     }
     
+    // BUG-1 Fix: Filter by tournamentId if specified
+    if (filters.tournamentId) {
+      filteredResults = filteredResults.filter(r => r.tournament_id === filters.tournamentId)
+    }
+    
+    // BUG-5 Fix: Filter by tournament levels if specified
+    if (filters.tournamentLevels?.length) {
+      filteredResults = filteredResults.filter(r => {
+        const tournament = tournaments.find(t => t.id === r.tournament_id)
+        return tournament && filters.tournamentLevels?.includes(tournament.level_id)
+      })
+    }
+
     // Group results by athlete
     const resultsByAthlete = new Map<string, TournamentResultWithDetails[]>()
     filteredResults.forEach(result => {
@@ -650,9 +663,28 @@ export async function getRanking(filters: RankingFilters): Promise<RankingEntry[
     // Sort by total points (descending)
     ranking.sort((a, b) => b.total_points - a.total_points)
     
-    // Assign ranks
+    // BUG-3 Fix: Assign shared ranks (1, 2, 2, 4 instead of 1, 2, 3, 4)
+    let currentRank = 1
+    let previousPoints: number | null = null
+    let athletesWithSamePoints = 0
+    
     ranking.forEach((entry, index) => {
-      entry.rank = index + 1
+      if (previousPoints === null) {
+        // First entry
+        entry.rank = currentRank
+        previousPoints = entry.total_points
+        athletesWithSamePoints = 1
+      } else if (entry.total_points === previousPoints) {
+        // Same points as previous - share rank
+        entry.rank = currentRank
+        athletesWithSamePoints++
+      } else {
+        // Different points - new rank (skipping positions as needed)
+        currentRank += athletesWithSamePoints
+        entry.rank = currentRank
+        previousPoints = entry.total_points
+        athletesWithSamePoints = 1
+      }
     })
     
     return ranking
@@ -679,6 +711,18 @@ export async function getRanking(filters: RankingFilters): Promise<RankingEntry[
     filteredResults = filteredResults.filter(r => {
       const tournamentYear = new Date(r.tournament.date).getFullYear()
       return tournamentYear === filters.year
+    })
+  }
+  
+  // BUG-1 Fix: Filter by tournamentId if specified
+  if (filters.tournamentId) {
+    filteredResults = filteredResults.filter(r => r.tournament_id === filters.tournamentId)
+  }
+  
+  // BUG-5 Fix: Filter by tournament levels if specified
+  if (filters.tournamentLevels?.length) {
+    filteredResults = filteredResults.filter(r => {
+      return r.tournament && filters.tournamentLevels?.includes(r.tournament.level_id)
     })
   }
   
@@ -721,9 +765,28 @@ export async function getRanking(filters: RankingFilters): Promise<RankingEntry[
   // Sort by total points (descending)
   ranking.sort((a, b) => b.total_points - a.total_points)
   
-  // Assign ranks
-  ranking.forEach((entry, index) => {
-    entry.rank = index + 1
+  // BUG-3 Fix: Assign shared ranks (1, 2, 2, 4 instead of 1, 2, 3, 4)
+  let currentRank = 1
+  let previousPoints: number | null = null
+  let athletesWithSamePoints = 0
+  
+  ranking.forEach((entry) => {
+    if (previousPoints === null) {
+      // First entry
+      entry.rank = currentRank
+      previousPoints = entry.total_points
+      athletesWithSamePoints = 1
+    } else if (entry.total_points === previousPoints) {
+      // Same points as previous - share rank
+      entry.rank = currentRank
+      athletesWithSamePoints++
+    } else {
+      // Different points - new rank (skipping positions as needed)
+      currentRank += athletesWithSamePoints
+      entry.rank = currentRank
+      previousPoints = entry.total_points
+      athletesWithSamePoints = 1
+    }
   })
   
   return ranking
