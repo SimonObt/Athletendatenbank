@@ -102,12 +102,12 @@ export function ResultForm({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             {isEditing ? 'Ergebnis bearbeiten' : 'Ergebnis hinzufügen'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -121,20 +121,20 @@ export function ResultForm({
           )}
 
           {/* Tournament Info */}
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="text-sm font-medium text-gray-700">{tournament.name}</div>
-            <div className="text-xs text-gray-500">
+          <div className="bg-slate-50 p-3 rounded-lg">
+            <div className="text-sm font-medium text-slate-700">{tournament.name}</div>
+            <div className="text-xs text-slate-500">
               {new Date(tournament.date).toLocaleDateString('de-DE')}
             </div>
           </div>
 
           {/* Athlete Selection */}
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Athlet <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <input
                 type="text"
                 value={athleteSearch}
@@ -148,25 +148,25 @@ export function ResultForm({
                 }}
                 onFocus={() => setShowAthleteDropdown(true)}
                 placeholder="Athlet suchen..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-blue-500"
                 required
               />
             </div>
             
             {showAthleteDropdown && filteredAthletes.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {filteredAthletes.map(athlete => (
                   <button
                     key={athlete.id}
                     type="button"
                     onClick={() => handleAthleteSelect(athlete)}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center justify-between"
+                    className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center justify-between"
                   >
                     <div>
                       <div className="font-medium">
                         {athlete.last_name}, {athlete.first_name}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-slate-500">
                         {athlete.club || 'Kein Verein'} • Jg. {athlete.birth_year}
                       </div>
                     </div>
@@ -189,13 +189,13 @@ export function ResultForm({
 
           {/* Placement Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Platzierung <span className="text-red-500">*</span>
             </label>
             <select
               value={placement}
               onChange={(e) => setPlacement(parseInt(e.target.value) as Placement)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full input-modern"
               required
             >
               {VALID_PLACEMENTS.map(p => (
@@ -204,14 +204,14 @@ export function ResultForm({
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               Judo-Standard: 1., 2., 3., 5., 7. Platz (keine 4. oder 6. Plätze)
             </p>
           </div>
 
           {/* Points */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Punkte
             </label>
             
@@ -222,9 +222,9 @@ export function ResultForm({
                   id="manualPoints"
                   checked={useManualPoints}
                   onChange={(e) => setUseManualPoints(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                <label htmlFor="manualPoints" className="text-sm text-gray-600">
+                <label htmlFor="manualPoints" className="text-sm text-slate-600">
                   Manuelle Punktevergabe
                 </label>
               </div>
@@ -234,7 +234,7 @@ export function ResultForm({
                   type="number"
                   value={manualPoints}
                   onChange={(e) => setManualPoints(e.target.value === '' ? '' : parseInt(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full input-modern"
                   placeholder="Punkte eingeben"
                   min="0"
                 />
@@ -244,7 +244,7 @@ export function ResultForm({
                     <span className="text-lg font-semibold text-green-700">{autoPoints}</span>
                     <span className="text-sm text-green-600 ml-1">Punkte</span>
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-slate-500">
                     Basierend auf Turnier-Level
                   </div>
                 </div>
@@ -257,14 +257,14 @@ export function ResultForm({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+              className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200"
             >
               Abbrechen
             </button>
             <button
               type="submit"
               disabled={!selectedAthlete}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               {isEditing ? 'Speichern' : 'Hinzufügen'}
             </button>

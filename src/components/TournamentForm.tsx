@@ -121,13 +121,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-blue-600" />
+          <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-indigo-600" />
             {tournament ? 'Turnier bearbeiten' : 'Neues Turnier'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -143,18 +143,18 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-700 uppercase tracking-wide">Turnier-Informationen</h3>
+              <h3 className="text-sm font-medium text-slate-700 uppercase tracking-wide">Turnier-Informationen</h3>
               
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Turniername <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="z.B. LET Köln 2024"
                   required
                 />
@@ -162,13 +162,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
 
               {/* Level */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Turnier-Level <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={formData.level_id}
                   onChange={(e) => handleChange('level_id', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                   required
                 >
                   <option value="">Bitte wählen...</option>
@@ -177,7 +177,7 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                   ))}
                 </select>
                 {selectedLevel && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     Punkte werden automatisch vom Level übernommen (können angepasst werden)
                   </p>
                 )}
@@ -185,41 +185,41 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
 
               {/* Date */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Datum <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
                   value={formData.date}
                   onChange={(e) => handleChange('date', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   required
                 />
               </div>
 
               {/* Location */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Ort
                 </label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => handleChange('location', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="z.B. Köln"
                 />
               </div>
 
               {/* Age Group */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Altersklasse
                 </label>
                 <select
                   value={formData.age_group}
                   onChange={(e) => handleChange('age_group', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Bitte wählen...</option>
                   {ageGroups.map(group => (
@@ -230,13 +230,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
 
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Status
                 </label>
                 <select
                   value={formData.status}
                   onChange={(e) => handleChange('status', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="planned">Geplant</option>
                   <option value="completed">Abgeschlossen</option>
@@ -245,13 +245,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Beschreibung
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   rows={3}
                   placeholder="Zusätzliche Informationen zum Turnier..."
                 />
@@ -260,8 +260,8 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
 
             {/* Right Column - Points */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-700 uppercase tracking-wide">Punkte-System</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="text-sm font-medium text-slate-700 uppercase tracking-wide">Punkte-System</h3>
+              <p className="text-xs text-slate-500">
                 Diese Punkte werden Athleten basierend auf ihrer Platzierung zugewiesen.
                 {selectedLevel && ' Voreingestellte Werte vom gewählten Level.'}
               </p>
@@ -269,7 +269,7 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
               <div className="grid grid-cols-2 gap-4">
                 {/* Place 1 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     1. Platz
                   </label>
                   <input
@@ -277,13 +277,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                     min="0"
                     value={formData.points_place_1}
                     onChange={(e) => handleChange('points_place_1', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Place 2 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     2. Platz
                   </label>
                   <input
@@ -291,13 +291,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                     min="0"
                     value={formData.points_place_2}
                     onChange={(e) => handleChange('points_place_2', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Place 3 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     3. Platz
                   </label>
                   <input
@@ -305,13 +305,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                     min="0"
                     value={formData.points_place_3}
                     onChange={(e) => handleChange('points_place_3', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Place 5 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     5. Platz
                   </label>
                   <input
@@ -319,13 +319,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                     min="0"
                     value={formData.points_place_5}
                     onChange={(e) => handleChange('points_place_5', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>
 
                 {/* Place 7 */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     7. Platz
                   </label>
                   <input
@@ -333,17 +333,17 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
                     min="0"
                     value={formData.points_place_7}
                     onChange={(e) => handleChange('points_place_7', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>
               </div>
 
               {selectedLevel && (
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mt-4">
-                  <p className="text-sm text-blue-800">
+                <div className="bg-indigo-50 border border-blue-200 p-3 rounded-lg mt-4">
+                  <p className="text-sm text-indigo-800">
                     <strong>Level-Vorlage:</strong> {selectedLevel.name}
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-indigo-600 mt-1">
                     Standard: 1.={selectedLevel.points_place_1}, 2.={selectedLevel.points_place_2}, 3.={selectedLevel.points_place_3}, 5.={selectedLevel.points_place_5}, 7.={selectedLevel.points_place_7}
                   </p>
                 </div>
@@ -355,13 +355,13 @@ export function TournamentForm({ tournament, tournamentLevels, isOpen, onClose, 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
             >
               Abbrechen
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               {tournament ? 'Speichern' : 'Anlegen'}
             </button>

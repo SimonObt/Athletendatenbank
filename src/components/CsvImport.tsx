@@ -175,12 +175,12 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             CSV Import
           </h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -195,9 +195,9 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
 
           {step === 'upload' && (
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">
+              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
+                <Upload className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                <p className="text-slate-600 mb-4">
                   CSV-Datei hierhin ziehen oder klicken zum Auswählen
                 </p>
                 <input
@@ -209,15 +209,15 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                 />
                 <label
                   htmlFor="csv-upload"
-                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                  className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer"
                 >
                   Datei auswählen
                 </label>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+              <div className="bg-slate-50 p-4 rounded-lg text-sm text-slate-600">
                 <h3 className="font-medium mb-2">Erwartetes CSV-Format:</h3>
-                <code className="block bg-gray-100 p-2 rounded mb-2">
+                <code className="block bg-slate-100 p-2 rounded mb-2">
                   Nachname,Vorname,Geschlecht,Jahrgang,Bezirk,Verein,Telefon,Email
                 </code>
                 <p className="mb-1"><strong>Pflichtfelder:</strong> Nachname, Vorname, Geschlecht (männlich/weiblich/divers), Jahrgang</p>
@@ -230,13 +230,13 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
           {(step === 'preview' || step === 'conflicts') && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-slate-600">
                   <span className="font-medium">{parsedData.length}</span> Athleten gefunden
                 </div>
                 <div className="flex gap-4 text-sm">
                   <span className="text-green-600">Neu: {stats.create}</span>
-                  <span className="text-blue-600">Update: {stats.update}</span>
-                  <span className="text-gray-600">Übersprungen: {stats.skip}</span>
+                  <span className="text-indigo-600">Update: {stats.update}</span>
+                  <span className="text-slate-600">Übersprungen: {stats.skip}</span>
                 </div>
               </div>
 
@@ -256,7 +256,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                         newMap.forEach((_, key) => newMap.set(key, 'create'));
                         setConflicts(newMap);
                       }}
-                      className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                      className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-blue-200"
                     >
                       Alle als neu importieren
                     </button>
@@ -294,7 +294,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                         });
                         setConflicts(newMap);
                       }}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      className="px-3 py-1 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200"
                     >
                       Alle bestehenden überspringen
                     </button>
@@ -304,7 +304,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
 
               <div className="overflow-x-auto max-h-96 overflow-y-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 sticky top-0">
+                  <thead className="bg-slate-50 sticky top-0">
                     <tr>
                       <th className="px-3 py-2 text-left">Name</th>
                       <th className="px-3 py-2 text-left">Jahrgang</th>
@@ -344,7 +344,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                               <select
                                 value={action}
                                 onChange={(e) => handleConflictAction(index, e.target.value as 'skip' | 'update' | 'create')}
-                                className="text-sm border border-gray-300 rounded px-2 py-1"
+                                className="text-sm border border-slate-300 rounded px-2 py-1"
                               >
                                 <option value="skip">Überspringen</option>
                                 <option value="update">Aktualisieren</option>
@@ -364,13 +364,13 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <button
                   onClick={() => setStep('upload')}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200"
                 >
                   Zurück
                 </button>
                 <button
                   onClick={handleImportAll}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                 >
                   Importieren ({stats.create + stats.update} Athleten)
                 </button>

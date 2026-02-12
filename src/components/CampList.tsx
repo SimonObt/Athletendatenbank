@@ -14,9 +14,9 @@ interface CampListProps {
 }
 
 const statusColors: Record<CampStatus, string> = {
-  'geplant': 'bg-gray-100 text-gray-800',
+  'geplant': 'bg-slate-100 text-slate-800',
   'nominierung': 'bg-yellow-100 text-yellow-800',
-  'bestätigt': 'bg-blue-100 text-blue-800',
+  'bestätigt': 'bg-indigo-100 text-indigo-800',
   'abgeschlossen': 'bg-green-100 text-green-800',
 };
 
@@ -58,10 +58,10 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
     <div className="space-y-4">
       {/* Header with Add Button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl font-semibold text-gray-900">Trainingscamps</h2>
+        <h2 className="text-xl font-semibold text-slate-900">Trainingscamps</h2>
         <button
           onClick={onAddNew}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 btn-primary px-4 py-2.5 gap-2 transition-colors"
         >
           <Plus className="w-4 h-4" />
           Neues Camp
@@ -71,21 +71,21 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg shadow">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
             placeholder="Camp suchen..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
         </div>
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-400" />
+          <Filter className="w-4 h-4 text-slate-400" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as CampStatus | 'all')}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="input-modern"
           >
             <option value="all">Alle Status</option>
             <option value="geplant">Geplant</option>
@@ -98,12 +98,12 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
 
       {/* Camp List */}
       {filteredCamps.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-gray-400 mb-2">
+        <div className="card-modern p-8 text-center">
+          <div className="text-slate-400 mb-2">
             <Calendar className="w-12 h-12 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Keine Trainingscamps</h3>
-          <p className="text-gray-500 mb-4">
+          <h3 className="text-lg font-medium text-slate-900 mb-2">Keine Trainingscamps</h3>
+          <p className="text-slate-500 mb-4">
             {camps.length === 0 
               ? 'Es wurden noch keine Trainingscamps angelegt.'
               : 'Keine Camps entsprechen den Filterkriterien.'}
@@ -111,25 +111,25 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
           {camps.length === 0 && (
             <button
               onClick={onAddNew}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
               Erstes Camp anlegen
             </button>
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="card-modern overflow-hidden">
           <div className="divide-y divide-gray-200">
             {filteredCamps.map((camp) => (
               <div
                 key={camp.id}
-                className="p-4 sm:p-6 hover:bg-gray-50 transition-colors cursor-pointer group"
+                className="p-4 sm:p-6 hover:bg-slate-50 transition-colors cursor-pointer group"
                 onClick={() => onSelect(camp)}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
                         {camp.name}
                       </h3>
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[camp.status]}`}>
@@ -137,7 +137,7 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
                       </span>
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {formatDateRange(camp.start_date, camp.end_date)}
@@ -165,7 +165,7 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
                         e.stopPropagation();
                         onDuplicate(camp);
                       }}
-                      className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                       title="Duplizieren"
                     >
                       <Copy className="w-4 h-4" />
@@ -175,7 +175,7 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
                         e.stopPropagation();
                         onEdit(camp);
                       }}
-                      className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                       title="Bearbeiten"
                     >
                       <Edit className="w-4 h-4" />
@@ -185,12 +185,12 @@ export function CampList({ camps, onEdit, onDelete, onAddNew, onDuplicate, onSel
                         e.stopPropagation();
                         onDelete(camp);
                       }}
-                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Löschen"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                    <ChevronRight className="w-5 h-5 text-slate-400" />
                   </div>
                 </div>
               </div>

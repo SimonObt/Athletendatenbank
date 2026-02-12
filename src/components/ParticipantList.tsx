@@ -21,8 +21,8 @@ const statusConfig: Record<ParticipantStatus, { label: string; color: string; bg
   },
   'eingeladen': { 
     label: 'Eingeladen', 
-    color: 'text-blue-700', 
-    bgColor: 'bg-blue-50 border-blue-200' 
+    color: 'text-indigo-700', 
+    bgColor: 'bg-indigo-50 border-blue-200' 
   },
   'zugesagt': { 
     label: 'Zugesagt', 
@@ -110,7 +110,7 @@ export function ParticipantList({
                   {groupParticipants.length}
                 </span>
               </div>
-              <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isExpanded ? '' : '-rotate-90'}`} />
+              <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform ${isExpanded ? '' : '-rotate-90'}`} />
             </button>
 
             {/* Group Content */}
@@ -124,15 +124,15 @@ export function ParticipantList({
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-700">
+                          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-sm font-medium text-slate-700">
                             {participant.athlete?.first_name?.[0]}{participant.athlete?.last_name?.[0]}
                           </div>
                           <div>
-                            <div className="font-medium text-gray-900">
+                            <div className="font-medium text-slate-900">
                               {participant.athlete?.first_name} {participant.athlete?.last_name}
                             </div>
                             {participant.athlete?.club && (
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-slate-500">
                                 {participant.athlete.club}
                               </div>
                             )}
@@ -140,7 +140,7 @@ export function ParticipantList({
                         </div>
                         
                         {participant.comment && (
-                          <div className="mt-2 text-sm text-gray-600 italic">
+                          <div className="mt-2 text-sm text-slate-600 italic">
                             &quot;{participant.comment}&quot;
                           </div>
                         )}
@@ -152,7 +152,7 @@ export function ParticipantList({
                           <select
                             value={participant.status}
                             onChange={(e) => onStatusChange(participant.id, e.target.value as ParticipantStatus)}
-                            className="appearance-none px-3 py-1.5 pr-8 text-sm border rounded-lg bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                            className="appearance-none px-3 py-1.5 pr-8 text-sm border rounded-lg bg-white hover:bg-slate-50 focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                             style={{ borderColor: 'inherit' }}
                           >
                             <option value={participant.status}>
@@ -169,13 +169,13 @@ export function ParticipantList({
                               </option>
                             ))}
                           </select>
-                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                         </div>
 
                         {/* Remove Button */}
                         <button
                           onClick={() => onRemove(participant.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                           title="Entfernen"
                         >
                           <X className="w-4 h-4" />
@@ -192,7 +192,7 @@ export function ParticipantList({
 
       {/* Empty State - No participants at all */}
       {participants.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-slate-500">
           Keine Teilnehmer vorhanden.
         </div>
       )}

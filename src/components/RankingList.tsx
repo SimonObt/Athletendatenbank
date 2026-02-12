@@ -73,11 +73,11 @@ export function RankingList({
       case 1:
         return <Trophy className="w-6 h-6 text-yellow-500" />;
       case 2:
-        return <Medal className="w-6 h-6 text-gray-400" />;
+        return <Medal className="w-6 h-6 text-slate-400" />;
       case 3:
         return <Award className="w-6 h-6 text-amber-600" />;
       default:
-        return <span className="w-6 h-6 flex items-center justify-center font-bold text-gray-500">{rank}.</span>;
+        return <span className="w-6 h-6 flex items-center justify-center font-bold text-slate-500">{rank}.</span>;
     }
   };
 
@@ -86,11 +86,11 @@ export function RankingList({
       case 1:
         return 'bg-yellow-50 border-yellow-200';
       case 2:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-slate-50 border-slate-200';
       case 3:
         return 'bg-amber-50 border-amber-200';
       default:
-        return 'bg-white border-gray-100';
+        return 'bg-white border-slate-100';
     }
   };
 
@@ -262,8 +262,8 @@ export function RankingList({
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow p-8 text-center">
-        <div className="text-gray-500">Lade Rangliste...</div>
+      <div className="card-modern p-8 text-center">
+        <div className="text-slate-500">Lade Rangliste...</div>
       </div>
     );
   }
@@ -272,41 +272,41 @@ export function RankingList({
     <div className="space-y-4">
       {/* Stats Overview */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow p-4 text-center">
-          <div className="text-2xl font-bold text-gray-900">{ranking.length}</div>
-          <div className="text-sm text-gray-500">Athleten</div>
+        <div className="card-modern p-4 text-center">
+          <div className="text-2xl font-bold text-slate-900">{ranking.length}</div>
+          <div className="text-sm text-slate-500">Athleten</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="card-modern p-4 text-center">
+          <div className="text-2xl font-bold text-indigo-600">
             {ranking.reduce((sum, r) => sum + r.tournament_count, 0)}
           </div>
-          <div className="text-sm text-gray-500">Turnierteilnahmen</div>
+          <div className="text-sm text-slate-500">Turnierteilnahmen</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 text-center">
+        <div className="card-modern p-4 text-center">
           <div className="text-2xl font-bold text-green-600">
             {ranking.reduce((sum, r) => sum + r.total_points, 0)}
           </div>
-          <div className="text-sm text-gray-500">Punkte gesamt</div>
+          <div className="text-sm text-slate-500">Punkte gesamt</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 text-center">
+        <div className="card-modern p-4 text-center">
           <div className="text-2xl font-bold text-purple-600">
             {ranking.length > 0 ? Math.round(ranking.reduce((sum, r) => sum + r.total_points, 0) / ranking.length) : 0}
           </div>
-          <div className="text-sm text-gray-500">Ø Punkte</div>
+          <div className="text-sm text-slate-500">Ø Punkte</div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-4">
+      <div className="card-modern p-4">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
-            <span className="font-medium text-gray-700">Filter</span>
+            <Filter className="w-5 h-5 text-slate-400" />
+            <span className="font-medium text-slate-700">Filter</span>
           </div>
           
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="text-sm text-indigo-600 hover:text-indigo-800"
           >
             {showFilters ? 'Weniger anzeigen' : 'Mehr Filter'}
           </button>
@@ -315,7 +315,7 @@ export function RankingList({
         <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Year Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               <Calendar className="w-4 h-4 inline mr-1" />
               Jahr
             </label>
@@ -325,7 +325,7 @@ export function RankingList({
                 ...filters, 
                 year: e.target.value ? parseInt(e.target.value) : undefined 
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
             >
               <option value="">Alle Jahre</option>
               {availableYears.map(year => (
@@ -336,7 +336,7 @@ export function RankingList({
 
           {/* Gender Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               <Users className="w-4 h-4 inline mr-1" />
               Geschlecht
             </label>
@@ -346,7 +346,7 @@ export function RankingList({
                 ...filters, 
                 gender: e.target.value as 'männlich' | 'weiblich' | 'divers' | undefined
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
             >
               <option value="">Alle</option>
               <option value="männlich">Männlich</option>
@@ -357,7 +357,7 @@ export function RankingList({
 
           {/* Birth Year Min */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Jahrgang von
             </label>
             <input
@@ -368,13 +368,13 @@ export function RankingList({
                 birthYearMin: e.target.value ? parseInt(e.target.value) : undefined 
               })}
               placeholder="z.B. 2008"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
             />
           </div>
 
           {/* Birth Year Max */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Jahrgang bis
             </label>
             <input
@@ -385,7 +385,7 @@ export function RankingList({
                 birthYearMax: e.target.value ? parseInt(e.target.value) : undefined 
               })}
               placeholder="z.B. 2010"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
             />
           </div>
         </div>
@@ -395,7 +395,7 @@ export function RankingList({
             {/* Age Group */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Altersklasse
                 </label>
                 <select
@@ -404,7 +404,7 @@ export function RankingList({
                     ...filters, 
                     ageGroup: e.target.value || undefined 
                   })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                 >
                   <option value="">Alle Altersklassen</option>
                   <option value="U11">U11</option>
@@ -418,7 +418,7 @@ export function RankingList({
 
               {/* Specific Tournament Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Spezifisches Turnier
                 </label>
                 <select
@@ -427,7 +427,7 @@ export function RankingList({
                     ...filters, 
                     tournamentId: e.target.value || undefined 
                   })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                 >
                   <option value="">Alle Turniere</option>
                   {tournaments.map(t => (
@@ -439,7 +439,7 @@ export function RankingList({
 
             {/* Tournament Level Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Turnier-Level (mehrere auswählbar)
               </label>
               <div className="flex flex-wrap gap-2">
@@ -451,8 +451,8 @@ export function RankingList({
                       onClick={() => toggleTournamentLevel(level.id)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
                       {level.label}
@@ -466,7 +466,7 @@ export function RankingList({
             <div className="flex justify-end">
               <button
                 onClick={() => onFiltersChange({})}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 border border-slate-300 rounded-lg hover:bg-slate-50"
               >
                 Filter zurücksetzen
               </button>
@@ -481,12 +481,12 @@ export function RankingList({
           {activeFilters.map(filter => (
             <span
               key={filter.key}
-              className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+              className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm"
             >
               {filter.label}
               <button
                 onClick={filter.onRemove}
-                className="p-0.5 hover:bg-blue-100 rounded-full"
+                className="p-0.5 hover:bg-indigo-100 rounded-full"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -498,13 +498,13 @@ export function RankingList({
       {/* Search and Export */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Athlet oder Verein suchen..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-blue-500"
           />
         </div>
         <div className="flex gap-2">
@@ -529,34 +529,34 @@ export function RankingList({
 
       {/* Ranking Table */}
       {filteredRanking.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-gray-400 mb-2">
+        <div className="card-modern p-8 text-center">
+          <div className="text-slate-400 mb-2">
             <Trophy className="w-12 h-12 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Keine Ergebnisse gefunden</h3>
-          <p className="text-gray-500">
+          <h3 className="text-lg font-medium text-slate-900 mb-2">Keine Ergebnisse gefunden</h3>
+          <p className="text-slate-500">
             Für die gewählten Filter gibt es noch keine Einträge.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
+        <div className="card-modern overflow-hidden">
+          <table className="table-modern">
+            <thead className="bg-slate-50 border-b">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 w-16">Rang</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Athlet</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Verein</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Jg.</th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700">Turniere</th>
-                <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Punkte</th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 w-16">Aktion</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-700 w-16">Rang</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-700">Athlet</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-700">Verein</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-slate-700">Jg.</th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-slate-700">Turniere</th>
+                <th className="px-4 py-3 text-right text-sm font-medium text-slate-700">Punkte</th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-slate-700 w-16">Aktion</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {paginatedRanking.map((entry) => (
                 <tr 
                   key={entry.athlete_id} 
-                  className={`hover:bg-gray-50 ${getRankClass(entry.rank || 0)}`}
+                  className={`hover:bg-slate-50 ${getRankClass(entry.rank || 0)}`}
                 >
                   <td className="px-4 py-3">
                     <div className="flex justify-center">
@@ -564,21 +564,21 @@ export function RankingList({
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-slate-900">
                       {entry.athlete.last_name}, {entry.athlete.first_name}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-slate-500">
                       {entry.athlete.gender === 'weiblich' ? 'weiblich' : 'männlich'}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">
+                  <td className="px-4 py-3 text-slate-600">
                     {entry.athlete.club || '-'}
                   </td>
-                  <td className="px-4 py-3 text-gray-600">
+                  <td className="px-4 py-3 text-slate-600">
                     {entry.athlete.birth_year}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                       {entry.tournament_count}
                     </span>
                   </td>
@@ -590,7 +590,7 @@ export function RankingList({
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => onAthleteClick?.(entry.athlete)}
-                      className="p-1.5 hover:bg-blue-100 rounded-full text-blue-600 transition-colors"
+                      className="p-1.5 hover:bg-indigo-100 rounded-full text-indigo-600 transition-colors"
                       title="Details anzeigen"
                     >
                       <Eye className="w-4 h-4" />
@@ -605,25 +605,25 @@ export function RankingList({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-600">
+        <div className="flex items-center justify-between card-modern p-4">
+          <div className="text-sm text-slate-600">
             Zeige {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredRanking.length)} von {filteredRanking.length} Athleten
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="p-2 rounded-lg border border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-slate-600">
               Seite {currentPage} von {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="p-2 rounded-lg border border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -633,7 +633,7 @@ export function RankingList({
 
       {/* Summary Footer */}
       {filteredRanking.length > 0 && (
-        <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
+        <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600">
           <p>
             Zeige {filteredRanking.length} von {ranking.length} Athleten
             {filters.year && ` für ${filters.year}`}

@@ -28,9 +28,9 @@ interface CampDetailProps {
 }
 
 const statusColors: Record<string, string> = {
-  'geplant': 'bg-gray-100 text-gray-800',
+  'geplant': 'bg-slate-100 text-slate-800',
   'nominierung': 'bg-yellow-100 text-yellow-800',
-  'bestätigt': 'bg-blue-100 text-blue-800',
+  'bestätigt': 'bg-indigo-100 text-indigo-800',
   'abgeschlossen': 'bg-green-100 text-green-800',
 };
 
@@ -110,7 +110,7 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-600">Laden...</div>
+        <div className="text-slate-600">Laden...</div>
       </div>
     );
   }
@@ -120,24 +120,24 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
       {/* Back Button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+        className="flex items-center gap-2 text-slate-600 hover:text-slate-900"
       >
         <ChevronLeft className="w-5 h-5" />
         Zurück zur Übersicht
       </button>
 
       {/* Camp Header */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="card-modern p-6">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">{camp.name}</h1>
+              <h1 className="text-2xl font-bold text-slate-900">{camp.name}</h1>
               <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[camp.status]}`}>
                 {statusLabels[camp.status]}
               </span>
             </div>
             
-            <div className="flex flex-wrap items-center gap-4 text-gray-600">
+            <div className="flex flex-wrap items-center gap-4 text-slate-600">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {formatDateRange(camp.start_date, camp.end_date)}
@@ -159,14 +159,14 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
             </div>
 
             {camp.description && (
-              <p className="mt-4 text-gray-700">{camp.description}</p>
+              <p className="mt-4 text-slate-700">{camp.description}</p>
             )}
           </div>
           
           <div className="flex items-center gap-2">
             <button
               onClick={() => onEdit(camp)}
-              className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
             >
               <Edit className="w-4 h-4" />
               Bearbeiten
@@ -185,7 +185,7 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
         {camp.capacity && (
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-slate-700">
                 Auslastung: {stats.zugesagt} von {camp.capacity} Plätzen
               </span>
               <span className={`text-sm font-medium ${
@@ -194,7 +194,7 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
                 {capacityPercentage}%
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-slate-200 rounded-full h-2.5">
               <div
                 className={`h-2.5 rounded-full transition-all ${
                   isFull ? 'bg-red-500' : isNearlyFull ? 'bg-yellow-500' : 'bg-green-500'
@@ -220,31 +220,31 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-          <div className="text-sm text-gray-600">Gesamt</div>
+        <div className="card-modern p-4">
+          <div className="text-2xl font-bold text-slate-900">{stats.total}</div>
+          <div className="text-sm text-slate-600">Gesamt</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="card-modern p-4">
           <div className="text-2xl font-bold text-yellow-600">{stats.vorgeschlagen}</div>
-          <div className="text-sm text-gray-600">Vorgeschlagen</div>
+          <div className="text-sm text-slate-600">Vorgeschlagen</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-2xl font-bold text-blue-600">{stats.eingeladen}</div>
-          <div className="text-sm text-gray-600">Eingeladen</div>
+        <div className="card-modern p-4">
+          <div className="text-2xl font-bold text-indigo-600">{stats.eingeladen}</div>
+          <div className="text-sm text-slate-600">Eingeladen</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="card-modern p-4">
           <div className="text-2xl font-bold text-green-600">{stats.zugesagt}</div>
-          <div className="text-sm text-gray-600">Zugesagt</div>
+          <div className="text-sm text-slate-600">Zugesagt</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="card-modern p-4">
           <div className="text-2xl font-bold text-red-600">{stats.abgesagt}</div>
-          <div className="text-sm text-gray-600">Abgesagt</div>
+          <div className="text-sm text-slate-600">Abgesagt</div>
         </div>
       </div>
 
       {/* Actions Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-lg font-semibold text-gray-900">Teilnehmer</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Teilnehmer</h2>
         <div className="flex items-center gap-2">
           {campWithDetails?.participants && campWithDetails.participants.length > 0 && (
             <EmailExport
@@ -254,7 +254,7 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
           )}
           <button
             onClick={() => setIsNominationOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 btn-primary px-4 py-2.5 gap-2 transition-colors"
           >
             <UserPlus className="w-4 h-4" />
             Athlet hinzufügen
@@ -273,15 +273,15 @@ export function CampDetail({ camp, athletes, onBack, onEdit, onDelete }: CampDet
           confirmedCount={stats.zugesagt}
         />
       ) : (
-        <div className="bg-white rounded-lg shadow p-8 text-center">
-          <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Keine Teilnehmer</h3>
-          <p className="text-gray-500 mb-4">
+        <div className="card-modern p-8 text-center">
+          <Users className="w-12 h-12 mx-auto text-slate-400 mb-4" />
+          <h3 className="text-lg font-medium text-slate-900 mb-2">Keine Teilnehmer</h3>
+          <p className="text-slate-500 mb-4">
             Es wurden noch keine Athleten zu diesem Camp hinzugefügt.
           </p>
           <button
             onClick={() => setIsNominationOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
           >
             Ersten Athleten hinzufügen
           </button>

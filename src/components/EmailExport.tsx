@@ -83,7 +83,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
       >
         <Mail className="w-4 h-4" />
         Email-Export
@@ -96,12 +96,12 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
       <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             Email-Adressen exportieren
           </h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <span className="sr-only">Schließen</span>
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +113,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
         <div className="p-6 space-y-4">
           {/* Filter Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Teilnehmer-Status
             </label>
             <div className="flex flex-wrap gap-2">
@@ -123,8 +123,8 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
                   onClick={() => setSelectedFilter(filter)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     selectedFilter === filter
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                   }`}
                 >
                   {filterLabels[filter]}
@@ -135,7 +135,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
 
           {/* Email Count */}
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
+            <span className="text-slate-600">
               {emails.length} von {filteredParticipants.length} Teilnehmern haben eine Email-Adresse
             </span>
           </div>
@@ -147,7 +147,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
                 <textarea
                   readOnly
                   value={emailString}
-                  className="w-full h-32 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg resize-none font-mono"
+                  className="w-full h-32 px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg resize-none font-mono"
                 />
               </div>
               
@@ -157,7 +157,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                     copied 
                       ? 'bg-green-600 text-white' 
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-indigo-600 text-white hover:bg-indigo-700'
                   }`}
                 >
                   {copied ? (
@@ -175,7 +175,7 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
                 
                 <button
                   onClick={handleDownloadCsv}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 btn-secondary px-4 py-2.5 gap-2 transition-colors"
                   title="Als CSV herunterladen"
                 >
                   <Download className="w-4 h-4" />
@@ -183,9 +183,9 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 bg-gray-50 rounded-lg">
+            <div className="text-center py-6 bg-slate-50 rounded-lg">
               <Mail className="w-10 h-10 mx-auto text-gray-300 mb-2" />
-              <p className="text-gray-500">
+              <p className="text-slate-500">
                 Keine Email-Adressen verfügbar
               </p>
             </div>
@@ -204,10 +204,10 @@ export function EmailExport({ participants, campName }: EmailExportProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t bg-gray-50 flex justify-end">
+        <div className="p-4 border-t bg-slate-50 flex justify-end">
           <button
             onClick={() => setIsOpen(false)}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
           >
             Schließen
           </button>

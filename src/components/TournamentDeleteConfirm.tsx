@@ -18,12 +18,12 @@ export function TournamentDeleteConfirm({ tournament, tournamentLevel, isOpen, o
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             Turnier löschen
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -35,30 +35,30 @@ export function TournamentDeleteConfirm({ tournament, tournamentLevel, isOpen, o
             <span className="font-medium">Diese Aktion kann nicht rückgängig gemacht werden!</span>
           </div>
 
-          <p className="text-gray-600 mb-4">
+          <p className="text-slate-600 mb-4">
             Möchten Sie das folgende Turnier wirklich löschen?
           </p>
 
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <div className="flex items-center gap-2 font-medium text-gray-900 mb-2">
-              <Trophy className="w-4 h-4 text-blue-600" />
+          <div className="bg-slate-50 p-4 rounded-lg mb-6">
+            <div className="flex items-center gap-2 font-medium text-slate-900 mb-2">
+              <Trophy className="w-4 h-4 text-indigo-600" />
               {tournament.name}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+            <div className="flex items-center gap-2 text-sm text-slate-600 mb-1">
               <Calendar className="w-4 h-4" />
               {new Date(tournament.date).toLocaleDateString('de-DE')}
             </div>
             {tournamentLevel && (
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-slate-600">
                 Level: {tournamentLevel.name}
               </div>
             )}
             {tournament.location && (
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-slate-600">
                 Ort: {tournament.location}
               </div>
             )}
-            <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-500">
+            <div className="mt-3 pt-3 border-t border-slate-200 text-xs text-slate-500">
               Punkte: 1.={tournament.points_place_1}, 2.={tournament.points_place_2}, 3.={tournament.points_place_3}, 5.={tournament.points_place_5}, 7.={tournament.points_place_7}
             </div>
           </div>
@@ -66,7 +66,7 @@ export function TournamentDeleteConfirm({ tournament, tournamentLevel, isOpen, o
           <div className="flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
             >
               Abbrechen
             </button>

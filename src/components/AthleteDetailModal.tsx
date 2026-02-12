@@ -48,11 +48,11 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
       case 1:
         return <Trophy className="w-5 h-5 text-yellow-500" />;
       case 2:
-        return <Medal className="w-5 h-5 text-gray-400" />;
+        return <Medal className="w-5 h-5 text-slate-400" />;
       case 3:
         return <Award className="w-5 h-5 text-amber-600" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center font-medium text-gray-500">{placement}.</span>;
+        return <span className="w-5 h-5 flex items-center justify-center font-medium text-slate-500">{placement}.</span>;
     }
   };
 
@@ -72,8 +72,8 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
     }).join(' ');
     
     return (
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Punkteentwicklung</h4>
+      <div className="bg-slate-50 rounded-lg p-4">
+        <h4 className="text-sm font-medium text-slate-700 mb-3">Punkteentwicklung</h4>
         <div className="relative h-32">
           <svg 
             viewBox={`0 0 ${width} ${height}`} 
@@ -124,7 +124,7 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
           </svg>
           
           {/* Y-axis labels */}
-          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-gray-400">
+          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-slate-400">
             <span>{maxPoints}</span>
             <span>{Math.round(maxPoints / 2)}</span>
             <span>0</span>
@@ -139,7 +139,7 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
             </div>
           )}
         </div>
-        <div className="mt-2 text-xs text-gray-500 text-center">
+        <div className="mt-2 text-xs text-slate-500 text-center">
           Kumulierte Punkte über {data.length} Turniere
         </div>
       </div>
@@ -150,29 +150,29 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b flex items-center justify-between bg-gray-50">
+        <div className="px-6 py-4 border-b flex items-center justify-between bg-slate-50">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-slate-900">
               {athlete.last_name}, {athlete.first_name}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               {athlete.club || 'Kein Verein'} • Jahrgang {athlete.birth_year} • {athlete.gender}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+            className="p-2 hover:bg-slate-200 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-slate-500" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 overflow-y-auto flex-1">
           {isLoading ? (
-            <div className="text-center py-8 text-gray-500">Lade Details...</div>
+            <div className="text-center py-8 text-slate-500">Lade Details...</div>
           ) : !stats || stats.totalTournaments === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-slate-500">
               <Trophy className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>Noch keine Turnierergebnisse vorhanden.</p>
             </div>
@@ -180,23 +180,23 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
             <div className="space-y-6">
               {/* Stats Overview */}
               <div className="grid grid-cols-4 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <div className="text-2xl font-bold text-blue-600">{stats.totalTournaments}</div>
-                  <div className="text-xs text-gray-600">Turniere</div>
+                <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-indigo-600">{stats.totalTournaments}</div>
+                  <div className="text-xs text-slate-600">Turniere</div>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-green-600">{stats.totalPoints}</div>
-                  <div className="text-xs text-gray-600">Punkte</div>
+                  <div className="text-xs text-slate-600">Punkte</div>
                 </div>
                 <div className="bg-purple-50 rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-purple-600">{stats.averagePlacement}</div>
-                  <div className="text-xs text-gray-600">Ø Platzierung</div>
+                  <div className="text-xs text-slate-600">Ø Platzierung</div>
                 </div>
                 <div className="bg-amber-50 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center">
                     {stats.bestPlacement ? getPlacementIcon(stats.bestPlacement) : '-'}
                   </div>
-                  <div className="text-xs text-gray-600 mt-1">Beste Platz.</div>
+                  <div className="text-xs text-slate-600 mt-1">Beste Platz.</div>
                 </div>
               </div>
 
@@ -205,12 +205,12 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
 
               {/* Year Filter */}
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-600">Jahr:</span>
+                <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-sm text-slate-600">Jahr:</span>
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                  className="px-3 py-1 border border-gray-300 rounded text-sm"
+                  className="px-3 py-1 border border-slate-300 rounded text-sm"
                 >
                   <option value="all">Alle Jahre</option>
                   {years.map(year => (
@@ -221,7 +221,7 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
 
               {/* Results List */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">
+                <h4 className="text-sm font-medium text-slate-700 mb-3">
                   Turnierergebnisse {selectedYear !== 'all' && `(${selectedYear})`}
                 </h4>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -234,20 +234,20 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
                   .map((dr, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
                         {getPlacementIcon(dr.result.placement)}
                         <div>
-                          <div className="font-medium text-gray-900">{dr.tournament.name}</div>
-                          <div className="text-xs text-gray-500">
+                          <div className="font-medium text-slate-900">{dr.tournament.name}</div>
+                          <div className="text-xs text-slate-500">
                             {new Date(dr.date).toLocaleDateString('de-DE')} • {new Date(dr.date).getFullYear()}
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-bold text-green-600">{dr.result.points} Punkte</div>
-                        <div className="text-xs text-gray-500">{dr.result.placement}. Platz</div>
+                        <div className="text-xs text-slate-500">{dr.result.placement}. Platz</div>
                       </div>
                     </div>
                   ))}
@@ -258,10 +258,10 @@ export function AthleteDetailModal({ athlete, isOpen, onClose }: AthleteDetailMo
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t bg-gray-50">
+        <div className="px-6 py-4 border-t bg-slate-50">
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors"
+            className="w-full px-4 py-2 bg-slate-200 hover:bg-gray-300 text-slate-800 rounded-lg transition-colors"
           >
             Schließen
           </button>

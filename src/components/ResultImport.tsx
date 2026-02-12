@@ -262,16 +262,16 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
       <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-slate-900">
               Turnierergebnisse importieren
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-slate-500 mt-1">
               {tournament.name} • {new Date(tournament.date).toLocaleDateString('de-DE')}
             </p>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -286,9 +286,9 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
 
           {step === 'upload' && (
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 mb-4">
+              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center">
+                <Upload className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                <p className="text-slate-600 mb-4">
                   CSV-Datei mit Turnierergebnissen hierhin ziehen oder klicken zum Auswählen
                 </p>
                 <input
@@ -300,19 +300,19 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                 />
                 <label
                   htmlFor="csv-results-upload"
-                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                  className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer"
                 >
                   Datei auswählen
                 </label>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+              <div className="bg-slate-50 p-4 rounded-lg text-sm text-slate-600">
                 <h3 className="font-medium mb-2">Erwartetes CSV-Format:</h3>
-                <code className="block bg-gray-100 p-2 rounded mb-2">
+                <code className="block bg-slate-100 p-2 rounded mb-2">
                   Nachname,Vorname,Jahrgang,Platz,Verein
                 </code>
                 <p className="mb-2">Alternative Spaltennamen: Name (statt Vorname/Nachname), Platzierung (statt Platz)</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-slate-500">
                   Gültige Platzierungen: 1, 2, 3, 5, 7 (Judo-Standard)
                 </p>
               </div>
@@ -322,7 +322,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
           {step === 'preview' && (
             <div className="space-y-4">
               <div className="flex justify-between items-center flex-wrap gap-2">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-slate-600">
                   <span className="font-medium">{parsedRows.length}</span> Ergebnisse gefunden
                 </div>
                 <div className="flex gap-4 text-sm flex-wrap">
@@ -336,7 +336,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                       Überschreiben: {stats.overwrite}
                     </span>
                   )}
-                  <span className="text-gray-600">
+                  <span className="text-slate-600">
                     <XCircle className="w-4 h-4 inline mr-1" />
                     Übersprungen: {stats.skip}
                   </span>
@@ -400,7 +400,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                         });
                         setActions(newMap);
                       }}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      className="px-3 py-1 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200"
                     >
                       Alle Duplikate überspringen
                     </button>
@@ -442,7 +442,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                         });
                         setActions(newMap);
                       }}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                      className="px-3 py-1 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200"
                     >
                       Alle Unbekannten überspringen
                     </button>
@@ -452,7 +452,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
 
               <div className="overflow-x-auto max-h-96 overflow-y-auto border rounded-lg">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 sticky top-0">
+                  <thead className="bg-slate-50 sticky top-0">
                     <tr>
                       <th className="px-3 py-2 text-left">Name</th>
                       <th className="px-3 py-2 text-left">Jahrgang</th>
@@ -487,7 +487,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                             {(action === 'import' || action === 'overwrite') ? (
                               <span className="font-medium text-green-600">{points}</span>
                             ) : (
-                              <span className="text-gray-400">-</span>
+                              <span className="text-slate-400">-</span>
                             )}
                           </td>
                           <td className="px-3 py-2">
@@ -500,7 +500,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                             <select
                               value={action}
                               onChange={(e) => handleActionChange(row.rowIndex, e.target.value as 'import' | 'skip' | 'create' | 'overwrite')}
-                              className="text-sm border border-gray-300 rounded px-2 py-1"
+                              className="text-sm border border-slate-300 rounded px-2 py-1"
                             >
                               {row.matchedAthlete ? (
                                 <>
@@ -530,7 +530,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                                     const athlete = athletes.find(a => a.id === e.target.value);
                                     if (athlete) handleMatchAthlete(row.rowIndex, athlete);
                                   }}
-                                  className="text-xs border border-gray-300 rounded px-2 py-1 w-full"
+                                  className="text-xs border border-slate-300 rounded px-2 py-1 w-full"
                                   defaultValue=""
                                 >
                                   <option value="" disabled>Ähnlichen Athleten wählen...</option>
@@ -553,14 +553,14 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <button
                   onClick={() => setStep('upload')}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200"
                 >
                   Zurück
                 </button>
                 <button
                   onClick={handleImportAll}
                   disabled={stats.import === 0 && stats.overwrite === 0}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   Importieren ({stats.import + stats.overwrite} Ergebnisse)
                 </button>

@@ -133,7 +133,7 @@ export function AthleteList({ athletes, onEdit, onDelete, onAddNew, onImportCsv 
                     <td className="text-slate-900 font-medium">{athlete.birth_year}</td>
                     <td>
                       <span className={`badge-modern ${
-                        athlete.gender === 'männlich' ? 'bg-blue-100 text-blue-700' :
+                        athlete.gender === 'männlich' ? 'bg-indigo-100 text-indigo-700' :
                         athlete.gender === 'weiblich' ? 'bg-pink-100 text-pink-700' :
                         'bg-slate-100 text-slate-700'
                       }`}>

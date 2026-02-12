@@ -18,12 +18,12 @@ export function CampDeleteConfirm({ camp, participantCount, isOpen, onClose, onC
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             Camp löschen
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -37,10 +37,10 @@ export function CampDeleteConfirm({ camp, participantCount, isOpen, onClose, onC
               </div>
             </div>
             <div>
-              <p className="text-gray-900 font-medium mb-1">
+              <p className="text-slate-900 font-medium mb-1">
                 Möchten Sie das Camp wirklich löschen?
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-slate-600 text-sm">
                 <strong>{camp.name}</strong> wird unwiderruflich gelöscht.
               </p>
               
@@ -56,10 +56,10 @@ export function CampDeleteConfirm({ camp, participantCount, isOpen, onClose, onC
           </div>
         </div>
 
-        <div className="p-4 border-t bg-gray-50 flex justify-end gap-3">
+        <div className="p-4 border-t bg-slate-50 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
           >
             Abbrechen
           </button>

@@ -126,12 +126,12 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-slate-900">
             {camp ? 'Camp bearbeiten' : 'Neues Trainingscamp'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-slate-600"
           >
             <X className="w-6 h-6" />
           </button>
@@ -154,7 +154,7 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
                   <button
                     type="button"
                     onClick={() => setShowPastDateWarning(false)}
-                    className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded hover:bg-gray-50"
+                    className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded hover:bg-slate-50"
                   >
                     Abbrechen
                   </button>
@@ -172,14 +172,14 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Name */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Camp-Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="z.B. Winter-Trainingscamp 2025"
                 required
               />
@@ -187,41 +187,41 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
 
             {/* Start Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Start-Datum <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 value={formData.start_date}
                 onChange={(e) => handleChange('start_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 required
               />
             </div>
 
             {/* End Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 End-Datum <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 value={formData.end_date}
                 onChange={(e) => handleChange('end_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 required
               />
             </div>
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Status <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.status}
                 onChange={(e) => handleChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
               >
                 {statusOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -233,21 +233,21 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Ort
               </label>
               <input
                 type="text"
                 value={formData.location}
                 onChange={(e) => handleChange('location', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="z.B. Sportzentrum Köln"
               />
             </div>
 
             {/* Capacity */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Kapazität (max. Athleten)
               </label>
               <input
@@ -255,14 +255,14 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
                 min="1"
                 value={formData.capacity}
                 onChange={(e) => handleChange('capacity', e.target.value === '' ? '' : parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="0 = unbegrenzt"
               />
             </div>
 
             {/* Cost per person */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Kosten pro Person (€)
               </label>
               <input
@@ -271,33 +271,33 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
                 step="0.01"
                 value={formData.cost_per_person}
                 onChange={(e) => handleChange('cost_per_person', e.target.value === '' ? '' : parseFloat(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="0.00"
               />
             </div>
 
             {/* Registration Deadline */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Anmelde-Deadline
               </label>
               <input
                 type="date"
                 value={formData.registration_deadline}
                 onChange={(e) => handleChange('registration_deadline', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
 
             {/* Description */}
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1">
                 Beschreibung
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 rows={3}
                 placeholder="Details zum Camp..."
               />
@@ -308,13 +308,13 @@ export function CampForm({ camp, isOpen, onClose, onSave, error }: CampFormProps
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
             >
               Abbrechen
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               {camp ? 'Speichern' : 'Anlegen'}
             </button>
