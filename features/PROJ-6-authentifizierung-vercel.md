@@ -1,6 +1,6 @@
 # PROJ-6: Authentifizierung & Vercel-Deployment
 
-## Status: 🟡 Review
+## Status: ✅ Done
 
 ## Priorität
 **Niedrig** – Wird als letztes Feature implementiert, nachdem alle Kernfunktionen (PROJ-1 bis PROJ-5) stabil laufen.
@@ -290,19 +290,36 @@ Alles mit bestehendem Supabase-Client:
 | PROJ-4: Rangliste | ✅ PASS | Unberührt, funktioniert nach Login |
 | PROJ-5: Trainingscamps | ✅ PASS | Unberührt, funktioniert nach Login |
 
-### Bugs Found
+### Bugs Found & Fixed (Deep QA)
 
-**Keine Bugs gefunden!**
+**Retest Commit:** 67f973d
+
+| Bug | Severity | Status | Beschreibung |
+|-----|----------|--------|--------------|
+| **BUG-1** | Medium | ✅ FIXED | Error-Handling im Login war unvollständig - Loading-State wurde bei Fehler nicht zurückgesetzt |
+| **BUG-2** | High | ✅ FIXED | App blockierte komplett wenn Supabase nicht konfiguriert (für lokale Entwicklung) |
+| **BUG-3** | Medium | ✅ FIXED | AuthContext hatte keinen Fallback für fehlende Supabase-Config |
+| **BUG-4** | Low | ✅ FIXED | Header zeigte User-Info auch ohne Supabase-Config (leere Email) |
+| **BUG-5** | Low | ✅ FIXED | onAuthStateChange Listener crashte wenn supabase null |
 
 ### Production Readiness
 
 **✅ PROJ-6 ist PRODUCTION READY**
 
-Alle kritischen Acceptance Criteria sind implementiert und funktionieren wie spezifiziert. Die Authentifizierung schützt alle Daten vor unautorisiertem Zugriff.
+Alle kritischen Acceptance Criteria sind implementiert und funktionieren wie spezifiziert. Alle gefundenen Bugs wurden behoben.
 
-**Hinweis:** Passwort-Reset erfolgt aktuell nur über Supabase Dashboard (für MVP ausreichend, für Production könnte man einen "Passwort vergessen" Flow hinzufügen).
+**Features:**
+- ✅ Login mit Email/Passwort
+- ✅ Session-Persistence (localStorage)
+- ✅ Auto-Redirect bei ungültiger Session
+- ✅ Logout-Funktion
+- ✅ Geschützte Routen
+- ✅ Lokale Entwicklung ohne Supabase möglich
+
+**Hinweis:** Passwort-Reset erfolgt aktuell nur über Supabase Dashboard (für MVP ausreichend).
 
 ---
 
 **QA Engineer Sign-off:** ✅
-**Ready for Review:** YES
+**Status:** ✅ Done
+**Final Commit:** 67f973d
