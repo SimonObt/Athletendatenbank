@@ -517,32 +517,32 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-slate-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-start">
+        <div className="mb-10 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2 tracking-tight">
               Athletendatenbank
             </h1>
-            <p className="text-gray-600">
+            <p className="text-slate-600 text-lg">
               Verwalten Sie Ihre Athleten, Turniere und behalten Sie den Überblick.
             </p>
           </div>
           
           {/* User Info & Logout - only show when Supabase is configured */}
           {isSupabaseConfigured && (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <User className="w-4 h-4" />
-                <span>{user?.email || 'Gast'}</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 bg-white rounded-lg shadow-soft border border-slate-200/50">
+                <User className="w-4 h-4 text-slate-400" />
+                <span className="font-medium">{user?.email || 'Gast'}</span>
               </div>
               <button
                 onClick={signOut}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-smooth border border-transparent hover:border-red-200"
               >
                 <LogOut className="w-4 h-4" />
-                Abmelden
+                <span className="font-medium">Abmelden</span>
               </button>
             </div>
           )}
@@ -550,26 +550,26 @@ export default function Home() {
 
         {/* Import Notifications */}
         {importResult && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-            <strong>Athleten-Import erfolgreich!</strong>
-            <span className="ml-2">
+          <div className="mb-6 bg-emerald-50 border border-emerald-200/50 text-emerald-800 px-5 py-4 rounded-xl shadow-soft">
+            <strong className="font-semibold">Athleten-Import erfolgreich!</strong>
+            <span className="ml-2 text-emerald-700">
               {importResult.imported} neu, {importResult.updated} aktualisiert, {importResult.skipped} übersprungen
             </span>
           </div>
         )}
 
         {importResultsNotification && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-            <strong>Ergebnis-Import erfolgreich!</strong>
-            <span className="ml-2">
+          <div className="mb-6 bg-emerald-50 border border-emerald-200/50 text-emerald-800 px-5 py-4 rounded-xl shadow-soft">
+            <strong className="font-semibold">Ergebnis-Import erfolgreich!</strong>
+            <span className="ml-2 text-emerald-700">
               {importResultsNotification.imported} importiert
               {importResultsNotification.overwritten > 0 && (
-                <span className="text-orange-600">, {importResultsNotification.overwritten} überschrieben</span>
+                <span className="text-amber-600 font-medium">, {importResultsNotification.overwritten} überschrieben</span>
               )}
               , {importResultsNotification.skipped} übersprungen
             </span>
             {importResultsNotification.errors.length > 0 && (
-              <div className="mt-2 text-sm text-red-600">
+              <div className="mt-2 text-sm text-red-600 font-medium">
                 {importResultsNotification.errors.length} Fehler aufgetreten
               </div>
             )}
@@ -577,69 +577,69 @@ export default function Home() {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 border-b border-gray-200">
+        <div className="mb-8 border-b border-slate-200/70">
           <nav className="flex gap-8" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('athletes')}
-              className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2.5 py-4 px-1 border-b-2 font-semibold text-sm transition-smooth ${
                 activeTab === 'athletes'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
-              <Users className="w-4 h-4" />
+              <Users className="w-5 h-5" />
               Athleten
-              <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+              <span className="ml-1 bg-slate-100 text-slate-600 py-0.5 px-2.5 rounded-full text-xs font-semibold">
                 {athletes.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('tournaments')}
-              className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2.5 py-4 px-1 border-b-2 font-semibold text-sm transition-smooth ${
                 activeTab === 'tournaments'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
-              <Trophy className="w-4 h-4" />
+              <Trophy className="w-5 h-5" />
               Turniere
-              <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+              <span className="ml-1 bg-slate-100 text-slate-600 py-0.5 px-2.5 rounded-full text-xs font-semibold">
                 {tournaments.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('results')}
-              className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2.5 py-4 px-1 border-b-2 font-semibold text-sm transition-smooth ${
                 activeTab === 'results'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
-              <Medal className="w-4 h-4" />
+              <Medal className="w-5 h-5" />
               Ergebnisse
             </button>
             <button
               onClick={() => setActiveTab('ranking')}
-              className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2.5 py-4 px-1 border-b-2 font-semibold text-sm transition-smooth ${
                 activeTab === 'ranking'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
-              <BarChart3 className="w-4 h-4" />
+              <BarChart3 className="w-5 h-5" />
               Rangliste
             </button>
             <button
               onClick={() => setActiveTab('camps')}
-              className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`flex items-center gap-2.5 py-4 px-1 border-b-2 font-semibold text-sm transition-smooth ${
                 activeTab === 'camps'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
               }`}
             >
-              <Tent className="w-4 h-4" />
+              <Tent className="w-5 h-5" />
               Trainingscamps
-              <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+              <span className="ml-1 bg-slate-100 text-slate-600 py-0.5 px-2.5 rounded-full text-xs font-semibold">
                 {camps.length}
               </span>
             </button>
