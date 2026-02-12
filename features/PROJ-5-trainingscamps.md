@@ -1,6 +1,6 @@
 # PROJ-5: Trainingscamps verwalten
 
-## Status: 🔵 Planned (Post-MVP)
+## Status: ✅ Done (Post-MVP)
 
 ## Beschreibung
 Verwaltung von Trainingscamps mit Athleten-Nominierung, Status-Tracking und Email-Export.

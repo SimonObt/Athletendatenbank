@@ -1,6 +1,6 @@
 # PROJ-3: Turnierergebnisse importieren & Punktesystem
 
-## Status: 🔵 Planned
+## Status: ✅ Done
 
 ## Beschreibung
 Import von Turnierergebnissen via CSV und automatische Punktevergabe an Athleten basierend auf dem Turnier-Level.

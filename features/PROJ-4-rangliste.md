@@ -1,6 +1,6 @@
 # PROJ-4: Rangliste mit Filterfunktion
 
-## Status: 🔵 Planned
+## Status: ✅ Done
 
 ## Beschreibung
 Eine Rangliste aller Athleten, sortiert nach Punkten, mit vielfältigen Filtermöglichkeiten.
