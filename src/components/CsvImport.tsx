@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { parse } from 'papaparse';
 import { Athlete, CsvAthlete } from '@/types';
-import { generateImportId, parseBirthYear, validateEmail, validatePhone } from '@/lib/utils';
-import { X, Upload, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { generateImportId, parseBirthYear } from '@/lib/utils';
+import { X, Upload, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface CsvImportProps {
   isOpen: boolean;
@@ -14,17 +14,20 @@ interface CsvImportProps {
 }
 
 export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvImportProps) {
+  // Use ref to avoid dependency issues
+  const existingAthletesRef = useRef(existingAthletes);
+  useEffect(() => {
+    existingAthletesRef.current = existingAthletes;
+  }, [existingAthletes]);
+
   const [parsedData, setParsedData] = useState<Partial<Athlete>[]>([]);
   const [conflicts, setConflicts] = useState<Map<number, 'skip' | 'update' | 'create'>>(new Map());
   const [step, setStep] = useState<'upload' | 'preview' | 'conflicts'>('upload');
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
-  
-  // Safety check - ensure we have an array
-  const athletesList = existingAthletes || [];
 
-  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -39,36 +42,36 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
           const athletes: Partial<Athlete>[] = [];
           const newConflicts = new Map<number, 'skip' | 'update' | 'create'>();
 
-          const csvImportIds = new Set<string>(); // BUG-2: Track IDs within CSV
+          const csvImportIds = new Set<string>();
           const skippedRows: number[] = [];
           const skippedReasons: Map<number, string> = new Map();
+
+          // Use ref value to avoid stale closure
+          const currentExisting = existingAthletesRef.current || [];
 
           data.forEach((row, index) => {
             if (!row.Vorname || !row.Nachname || !row.Jahrgang) {
               skippedRows.push(index);
               skippedReasons.set(index, 'Fehlende Pflichtfelder');
-              return; // Skip invalid rows
+              return;
             }
 
-            // BUG-1 Fix: Jahrgang korrekt parsen
             const birthYear = parseBirthYear(row.Jahrgang);
             if (!birthYear) {
               skippedRows.push(index);
               skippedReasons.set(index, 'Ungültiger Jahrgang: ' + row.Jahrgang);
-              return; // Skip invalid birth year
+              return;
             }
 
-            // BUG-4 Fix: Geschlecht validieren (Pflichtfeld)
             const genderLower = row.Geschlecht?.toLowerCase().trim();
             if (!genderLower || (genderLower !== 'männlich' && genderLower !== 'weiblich' && genderLower !== 'divers')) {
               skippedRows.push(index);
               skippedReasons.set(index, 'Ungültiges Geschlecht: ' + (row.Geschlecht || 'leer'));
-              return; // Skip if gender is missing or invalid
+              return;
             }
             const gender = genderLower === 'weiblich' ? 'weiblich' : 
                           genderLower === 'divers' ? 'divers' : 'männlich';
 
-            // BUG-3 Fix: Email/Telefon validieren (nur Warnung, nicht blockieren)
             const email = row.Email?.trim() || '';
             const phone = row.Telefon?.trim() || '';
 
@@ -83,29 +86,26 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
               email,
             };
 
-            // BUG-2 Fix: CSV-interne Dubletten prüfen
             const importId = generateImportId(athlete.last_name!, athlete.first_name!, athlete.birth_year!);
             
             if (csvImportIds.has(importId)) {
               skippedRows.push(index);
               skippedReasons.set(index, 'Dublette innerhalb der CSV');
-              return; // Skip duplicate within CSV
+              return;
             }
             csvImportIds.add(importId);
 
             athletes.push(athlete);
 
-            // Check for conflicts with existing DB
-            const existing = athletesList.find(a => a.import_id === importId);
+            const existing = currentExisting.find(a => a.import_id === importId);
             
             if (existing) {
-              newConflicts.set(athletes.length - 1, 'skip'); // Default to skip
+              newConflicts.set(athletes.length - 1, 'skip');
             } else {
               newConflicts.set(athletes.length - 1, 'create');
             }
           });
 
-          // Show warning for skipped rows
           if (skippedRows.length > 0) {
             console.warn(`CSV Import: ${skippedRows.length} Zeilen übersprungen:`, skippedReasons);
           }
@@ -126,7 +126,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
         setError('Fehler beim Lesen der Datei: ' + err.message);
       }
     });
-  }, [existingAthletes]);
+  };
 
   const handleConflictAction = (index: number, action: 'skip' | 'update' | 'create') => {
     setConflicts(prev => {
@@ -164,6 +164,8 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
   };
 
   const stats = getConflictStats();
+  const athletesList = existingAthletes || [];
+  
   const hasConflicts = parsedData.some((_, index) => {
     const importId = generateImportId(parsedData[index].last_name!, parsedData[index].first_name!, parsedData[index].birth_year!);
     return athletesList.some(a => a.import_id === importId);
