@@ -1,8 +1,10 @@
 # QA Test Report: PROJ-1 - Athleten anlegen & verwalten
 
 **Test Date:** 2026-02-11  
+**Retest Date:** 2026-02-12 (nach Bugfixes)  
 **Tester:** QA Engineer Agent  
-**Build Status:** ✅ Successful (Next.js 16.1.6)
+**Build Status:** ✅ Successful (Next.js 16.1.6)  
+**Commit:** 46e056b
 
 ---
 
@@ -233,6 +235,32 @@ PROJ-1 ist funktional vollständig und die wichtigsten Features funktionieren wi
 - Build: ✅ `next build` erfolgreich
 - TypeScript: ✅ Keine Compile-Fehler
 - Static Analysis: ✅ Keine kritischen Code-Smells
+
+---
+
+## 🎉 Bugfix Retest - 2026-02-12
+
+**Commit:** 46e056b  
+**Frontend Developer:** Clawdi Agent
+
+### ✅ Alle 4 Bugs wurden erfolgreich behoben:
+
+| Bug | Severity | Status | Fix Summary |
+|-----|----------|--------|-------------|
+| **BUG-1** | Medium | ✅ FIXED | `parseBirthYear()` - 2-stellige Jahre werden korrekt zu 19xx/20xx umgewandelt |
+| **BUG-2** | Medium | ✅ FIXED | CSV-interne Dubletten werden via `Set<string>` erkannt und übersprungen |
+| **BUG-3** | Low | ✅ FIXED | Email/Telefon-Validierung im `AthleteForm` ist jetzt aktiv |
+| **BUG-4** | Low | ✅ FIXED | Geschlecht ist jetzt Pflichtfeld im CSV-Import (kein Default mehr) |
+
+### Geänderte Dateien:
+- `src/lib/utils.ts` - Neue `parseBirthYear()` Funktion
+- `src/components/AthleteForm.tsx` - Email/Telefon Validierung
+- `src/components/CsvImport.tsx` - Jahrgang, Geschlecht, Dubletten-Validierung
+
+### Final Status nach Retest:
+- ✅ **Acceptance Criteria:** 12/12 (100%)
+- ✅ **Edge Cases:** 5/5 (100%)
+- ✅ **PROJ-1 ist PRODUCTION READY**
 
 ---
 
