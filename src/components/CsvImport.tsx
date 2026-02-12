@@ -21,6 +21,9 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
 
   if (!isOpen) return null;
 
+  // Safety check for existingAthletes
+  const safeExistingAthletes = existingAthletes || [];
+
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -93,7 +96,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
             athletes.push(athlete);
 
             // Check for conflicts with existing DB
-            const existing = existingAthletes.find(a => a.import_id === importId);
+            const existing = safeExistingAthletes.find(a => a.import_id === importId);
             
             if (existing) {
               newConflicts.set(athletes.length - 1, 'skip'); // Default to skip
@@ -123,7 +126,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
         setError('Fehler beim Lesen der Datei: ' + err.message);
       }
     });
-  }, [existingAthletes]);
+  }, [safeExistingAthletes]);
 
   const handleConflictAction = (index: number, action: 'skip' | 'update' | 'create') => {
     setConflicts(prev => {
@@ -163,7 +166,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
   const stats = getConflictStats();
   const hasConflicts = parsedData.some((_, index) => {
     const importId = generateImportId(parsedData[index].last_name!, parsedData[index].first_name!, parsedData[index].birth_year!);
-    return existingAthletes.some(a => a.import_id === importId);
+    return safeExistingAthletes.some(a => a.import_id === importId);
   });
 
   return (
@@ -264,7 +267,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                             parsedData[key].first_name!, 
                             parsedData[key].birth_year!
                           );
-                          if (existingAthletes.some(a => a.import_id === importId)) {
+                          if (safeExistingAthletes.some(a => a.import_id === importId)) {
                             newMap.set(key, 'update');
                           }
                         });
@@ -283,7 +286,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                             parsedData[key].first_name!, 
                             parsedData[key].birth_year!
                           );
-                          if (existingAthletes.some(a => a.import_id === importId)) {
+                          if (safeExistingAthletes.some(a => a.import_id === importId)) {
                             newMap.set(key, 'skip');
                           }
                         });
@@ -311,7 +314,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                   <tbody className="divide-y divide-gray-200">
                     {parsedData.map((athlete, index) => {
                       const importId = generateImportId(athlete.last_name!, athlete.first_name!, athlete.birth_year!);
-                      const existing = existingAthletes.find(a => a.import_id === importId);
+                      const existing = safeExistingAthletes.find(a => a.import_id === importId);
                       const action = conflicts.get(index) || 'create';
                       
                       return (
