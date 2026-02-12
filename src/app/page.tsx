@@ -23,6 +23,7 @@ import { AthleteDetailModal } from '@/components/AthleteDetailModal';
 import { CampList } from '@/components/CampList';
 import { CampForm } from '@/components/CampForm';
 import { CampDetail } from '@/components/CampDetail';
+import { CampDeleteConfirm } from '@/components/CampDeleteConfirm';
 import { Users, Trophy, Medal, BarChart3, ChevronLeft, Tent } from 'lucide-react';
 
 type Tab = 'athletes' | 'tournaments' | 'results' | 'ranking' | 'camps';
@@ -883,6 +884,17 @@ export default function Home() {
           }}
           onSave={handleSaveCamp}
           error={campFormError}
+        />
+
+        <CampDeleteConfirm
+          camp={deletingCamp}
+          participantCount={deletingCamp ? camps.find(c => c.id === deletingCamp.id)?.participant_count || 0 : 0}
+          isOpen={isCampDeleteOpen}
+          onClose={() => {
+            setIsCampDeleteOpen(false);
+            setDeletingCamp(null);
+          }}
+          onConfirm={handleConfirmDeleteCamp}
         />
       </div>
     </main>
