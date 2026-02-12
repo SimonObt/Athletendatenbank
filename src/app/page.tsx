@@ -508,7 +508,11 @@ export default function Home() {
   }
 
   // Show login screen if not authenticated
-  if (!isAuthenticated) {
+  // Note: If Supabase is not configured, the app works in local-only mode without auth
+  // This is detected by checking if supabase client is null
+  const isSupabaseConfigured = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  
+  if (isSupabaseConfigured && !isAuthenticated) {
     return <LoginScreen />;
   }
 
@@ -526,20 +530,22 @@ export default function Home() {
             </p>
           </div>
           
-          {/* User Info & Logout */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <User className="w-4 h-4" />
-              <span>{user?.email}</span>
+          {/* User Info & Logout - only show when Supabase is configured */}
+          {isSupabaseConfigured && (
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <User className="w-4 h-4" />
+                <span>{user?.email || 'Gast'}</span>
+              </div>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Abmelden
+              </button>
             </div>
-            <button
-              onClick={signOut}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Abmelden
-            </button>
-          </div>
+          )}
         </div>
 
         {/* Import Notifications */}

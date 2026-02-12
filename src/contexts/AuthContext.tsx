@@ -23,31 +23,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check active session on mount
     const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (session) {
-        setSession(session);
-        setUser(session.user);
+      if (!supabase) {
+        // No Supabase configured - skip auth (for local development)
+        setIsLoading(false);
+        return;
       }
-      
-      setIsLoading(false);
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+          setSession(session);
+          setUser(session.user);
+        }
+      } catch (error) {
+        console.error('Error checking session:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     
     checkSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+    // Listen for auth changes (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.)
+    const { data: { subscription } } = supabase?.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state changed:', event);
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
       }
-    );
+    ) ?? { data: { subscription: { unsubscribe: () => {} } } };
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
+    if (!supabase) {
+      return { error: 'Supabase ist nicht konfiguriert.' };
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -71,7 +86,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     setSession(null);
     setUser(null);
   };

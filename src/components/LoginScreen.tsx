@@ -18,13 +18,18 @@ export function LoginScreen() {
     setError(null);
     setIsLoading(true);
 
-    const { error: signInError } = await signIn(email, password);
-    
-    if (signInError) {
-      setError('Ungültige Email oder Passwort');
+    try {
+      const { error: signInError } = await signIn(email, password);
+      
+      if (signInError) {
+        setError('Ungültige Email oder Passwort');
+      }
+      // Success: AuthContext will update and app will redirect automatically
+    } catch (err) {
+      setError('Ein unerwarteter Fehler ist aufgetreten.');
+    } finally {
       setIsLoading(false);
     }
-    // Success: AuthContext will update and app will redirect automatically
   };
 
   return (
