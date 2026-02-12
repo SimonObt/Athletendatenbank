@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Athlete, Tournament, TournamentResultWithDetails, RankingEntry, RankingFilters, ParsedResultRow, TrainingCamp } from '@/types';
+import { useAuth } from '@/contexts/AuthContext';
 import { useAthletes } from '@/hooks/useAthletes';
 import { useTournaments } from '@/hooks/useTournaments';
 import { useResults } from '@/hooks/useResults';
@@ -24,7 +25,8 @@ import { CampList } from '@/components/CampList';
 import { CampForm } from '@/components/CampForm';
 import { CampDetail } from '@/components/CampDetail';
 import { CampDeleteConfirm } from '@/components/CampDeleteConfirm';
-import { Users, Trophy, Medal, BarChart3, ChevronLeft, Tent } from 'lucide-react';
+import { LoginScreen } from '@/components/LoginScreen';
+import { Users, Trophy, Medal, BarChart3, ChevronLeft, Tent, LogOut, User } from 'lucide-react';
 
 type Tab = 'athletes' | 'tournaments' | 'results' | 'ranking' | 'camps';
 type CampsView = 'list' | 'detail';
@@ -48,6 +50,9 @@ export default function Home() {
     deleteAthlete, 
     importAthletes 
   } = useAthletes();
+
+  // Auth
+  const { user, isAuthenticated, isLoading: isLoadingAuth, signOut } = useAuth();
 
   const {
     tournaments,
@@ -493,7 +498,8 @@ export default function Home() {
     }
   };
 
-  if (isLoading) {
+  // Show loading while checking auth
+  if (isLoadingAuth) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-600">Laden...</div>
@@ -501,17 +507,39 @@ export default function Home() {
     );
   }
 
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Athletendatenbank
-          </h1>
-          <p className="text-gray-600">
-            Verwalten Sie Ihre Athleten, Turniere und behalten Sie den Überblick.
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Athletendatenbank
+            </h1>
+            <p className="text-gray-600">
+              Verwalten Sie Ihre Athleten, Turniere und behalten Sie den Überblick.
+            </p>
+          </div>
+          
+          {/* User Info & Logout */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <User className="w-4 h-4" />
+              <span>{user?.email}</span>
+            </div>
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Abmelden
+            </button>
+          </div>
         </div>
 
         {/* Import Notifications */}

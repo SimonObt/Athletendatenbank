@@ -66,7 +66,56 @@ NEXT_PUBLIC_SUPABASE_URL=deine_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=dein_anon_key
 ```
 
-## 5. Fertig!
+## 5. RLS Policies für Authentifizierung (PROJ-6)
+
+Führe im SQL Editor aus:
+
+```sql
+-- RLS für Athleten aktivieren
+ALTER TABLE athletes ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Nur eingeloggte User können lesen
+CREATE POLICY "Allow read for authenticated users" ON athletes
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+-- Policy: Nur eingeloggte User können schreiben
+CREATE POLICY "Allow write for authenticated users" ON athletes
+  FOR ALL USING (auth.role() = 'authenticated');
+
+-- RLS für Turniere aktivieren
+ALTER TABLE tournaments ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow read for authenticated users" ON tournaments
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow write for authenticated users" ON tournaments
+  FOR ALL USING (auth.role() = 'authenticated');
+
+-- RLS für Turnierergebnisse aktivieren
+ALTER TABLE tournament_results ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow read for authenticated users" ON tournament_results
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow write for authenticated users" ON tournament_results
+  FOR ALL USING (auth.role() = 'authenticated');
+
+-- RLS für Trainingscamps aktivieren
+ALTER TABLE training_camps ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow read for authenticated users" ON training_camps
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow write for authenticated users" ON training_camps
+  FOR ALL USING (auth.role() = 'authenticated');
+```
+
+## 6. Ersten Account erstellen
+
+1. Registriere dich in der App mit Email/Passwort
+2. Oder erstelle User direkt im Supabase Dashboard unter "Authentication" → "Users"
+
+## 7. Fertig!
 
 Starte die App neu mit:
 ```bash

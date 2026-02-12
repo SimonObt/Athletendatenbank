@@ -131,6 +131,91 @@ CREATE POLICY "Allow write for authenticated users" ON athletes
 
 ---
 
+## Tech-Design (Solution Architect)
+
+### Component-Struktur
+
+```
+App (Root)
+├── AuthProvider (Global Session Context)
+│   └── Session-State für alle Components verfügbar
+│
+├── Login-Screen (/login)
+│   ├── Email-Input
+│   ├── Passwort-Input (mit Sichtbarkeit-Toggle)
+│   ├── Login-Button
+│   ├── Fehlermeldung (bei falschem Login)
+│   └── "Passwort vergessen?" Link
+│
+├── ProtectedRoute Wrapper
+│   └── Prüft Session → Weiterleitung zu Login wenn nicht authentifiziert
+│
+└── Haupt-App (nach Login)
+    ├── Header (aktualisiert)
+    │   ├── User-Email Anzeige
+    │   └── Logout-Button
+    └── Bestehende Tabs (Athleten, Turniere, etc.)
+```
+
+### Daten-Model
+
+**Supabase Auth (automatisch verwaltet):**
+- User-Account: Email + Passwort (verschlüsselt von Supabase)
+- Session: JWT Token mit Ablaufdatum (30 Tage)
+- Keine eigene User-Tabelle nötig – Supabase verwaltet alles
+
+**RLS (Row Level Security) für Datenschutz:**
+- Athleten-Tabelle: Nur eingeloggte User können lesen/schreiben
+- Turniere-Tabelle: Nur eingeloggte User können lesen/schreiben
+- Ergebnisse-Tabelle: Nur eingeloggte User können lesen/schreiben
+
+### Tech-Entscheidungen
+
+**Warum Supabase Auth?**
+→ Bereits im Projekt integriert, kostenlos für einzelnen User, macht Passwort-Verschlüsselung automatisch
+
+**Warum localStorage für Session?**
+→ Token bleibt nach Browser-Neustart erhalten ("Eingeloggt bleiben"), Supabase unterstützt das nativ
+
+**Warum ProtectedRoute Wrapper?**
+→ Einzelne Komponente, die alle geschützten Seiten umschließt → keine Code-Duplikation
+
+**Warum keine eigene User-Verwaltung?**
+→ Supabase Dashboard reicht für MVP (ein einzelner Admin-User)
+
+### Dependencies
+
+**Keine neuen Packages nötig!**
+
+Alles mit bestehendem Supabase-Client:
+- `@supabase/supabase-js` (bereits installiert)
+- React Context API (built-in)
+- Next.js Router (bereits installiert)
+
+### Wiederverwendung aus bestehenden PROJ
+
+**Wiederverwendbare Patterns:**
+- Modal-Struktur von PROJ-1 (AthleteForm) → Login-Screen Design
+- Loading-States aus PROJ-2 → Auth-Loading
+- Error-Handling aus PROJ-3 → Login-Fehlermeldungen
+
+**Zu aktualisierende Dateien:**
+- `src/lib/supabase.ts` → Auth-Funktionen hinzufügen
+- `src/app/page.tsx` → Auth-Check + Weiterleitung
+- `src/app/layout.tsx` → AuthProvider Wrapper
+
+### Integration mit Vercel
+
+**Environment Variablen (bereits vorhanden):**
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+**Neue Config:**
+- `middleware.ts` → Schützt alle Routen außer /login
+- Keine Änderungen an Build-Prozess nötig
+
+---
+
 ## Schätzung
 **Aufwand:** 1-2 Tage (Supabase Auth macht den Großteil)
 **Komplexität:** Mittel (hauptsächlich Integration, wenig Eigenentwicklung)
