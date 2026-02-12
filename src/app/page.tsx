@@ -922,7 +922,7 @@ export default function Home() {
 
         <CampDeleteConfirm
           camp={deletingCamp}
-          participantCount={deletingCamp ? camps.find(c => c.id === deletingCamp.id)?.participant_count || 0 : 0}
+          participantCount={0}
           isOpen={isCampDeleteOpen}
           onClose={() => {
             setIsCampDeleteOpen(false);
