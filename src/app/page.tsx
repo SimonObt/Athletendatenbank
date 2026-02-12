@@ -115,7 +115,7 @@ export default function Home() {
   const [editingResult, setEditingResult] = useState<TournamentResultWithDetails | null>(null);
   const [deletingResult, setDeletingResult] = useState<TournamentResultWithDetails | null>(null);
   const [resultFormError, setResultFormError] = useState<string | null>(null);
-  const [importResultsNotification, setImportResultsNotification] = useState<{imported: number; skipped: number; errors: string[]} | null>(null);
+  const [importResultsNotification, setImportResultsNotification] = useState<{imported: number; skipped: number; overwritten: number; errors: string[]} | null>(null);
 
   // Modal state - Athlete Detail
   const [selectedAthleteForDetail, setSelectedAthleteForDetail] = useState<Athlete | null>(null);
@@ -385,13 +385,14 @@ export default function Home() {
     setIsResultImportOpen(true);
   };
 
-  const handleImportResults = (rows: ParsedResultRow[], actions: Map<number, 'import' | 'skip' | 'create'>) => {
+  const handleImportResults = (rows: ParsedResultRow[], actions: Map<number, 'import' | 'skip' | 'create' | 'overwrite'>) => {
     if (!selectedTournament) return;
 
     importResults(selectedTournament.id, rows, actions, selectedTournament).then((result) => {
       setImportResultsNotification({
         imported: result.imported,
         skipped: result.skipped,
+        overwritten: result.overwritten,
         errors: result.errors
       });
 
@@ -520,7 +521,11 @@ export default function Home() {
           <div className="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
             <strong>Ergebnis-Import erfolgreich!</strong>
             <span className="ml-2">
-              {importResultsNotification.imported} importiert, {importResultsNotification.skipped} übersprungen
+              {importResultsNotification.imported} importiert
+              {importResultsNotification.overwritten > 0 && (
+                <span className="text-orange-600">, {importResultsNotification.overwritten} überschrieben</span>
+              )}
+              , {importResultsNotification.skipped} übersprungen
             </span>
             {importResultsNotification.errors.length > 0 && (
               <div className="mt-2 text-sm text-red-600">
@@ -836,7 +841,7 @@ export default function Home() {
               tournament={selectedTournament}
               athletes={athletes}
               onImport={handleImportResults}
-              existingResults={tournamentResults.map(r => ({ athlete_id: r.athlete_id, placement: r.placement }))}
+              existingResults={tournamentResults.map(r => ({ athlete_id: r.athlete_id, placement: r.placement, result_id: r.id }))}
             />
           </>
         )}

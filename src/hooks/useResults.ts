@@ -303,7 +303,7 @@ export function useResults() {
   const importResults = useCallback(async (
     tournamentId: string,
     parsedRows: ParsedResultRow[],
-    actions: Map<number, 'import' | 'skip' | 'create'>,
+    actions: Map<number, 'import' | 'skip' | 'create' | 'overwrite'>,
     tournamentPoints: {
       points_place_1: number;
       points_place_2: number;
@@ -314,11 +314,13 @@ export function useResults() {
   ): Promise<{
     imported: number;
     skipped: number;
+    overwritten: number;
     errors: string[];
     duplicates: Array<{ row: ParsedResultRow; existing: TournamentResult }>;
   }> => {
     let imported = 0;
     let skipped = 0;
+    let overwritten = 0;
     const errors: string[] = [];
     const duplicates: Array<{ row: ParsedResultRow; existing: TournamentResult }> = [];
 
@@ -336,27 +338,39 @@ export function useResults() {
           continue;
         }
 
-        // Check for existing result (duplicate)
-        const existing = await checkDuplicateResult(tournamentId, row.matchedAthlete.id);
-        if (existing) {
-          duplicates.push({ row, existing });
-          continue;
-        }
-
         // Calculate points
         const points = calculatePoints(row.placement, tournamentPoints);
 
-        // Create result
-        await addResultApi({
-          tournament_id: tournamentId,
-          athlete_id: row.matchedAthlete.id,
-          placement: row.placement,
-          points,
-          is_manual: false,
-          imported_at: new Date().toISOString(),
-        });
-
-        imported++;
+        // Check for existing result (duplicate)
+        const existing = await checkDuplicateResult(tournamentId, row.matchedAthlete.id);
+        
+        if (existing) {
+          if (action === 'overwrite') {
+            // BUG-3 Fix: Overwrite existing result
+            await updateResultApi(existing.id, {
+              placement: row.placement,
+              points,
+              is_manual: false,
+              imported_at: new Date().toISOString(),
+            });
+            overwritten++;
+          } else {
+            duplicates.push({ row, existing });
+            skipped++;
+            continue;
+          }
+        } else {
+          // Create new result
+          await addResultApi({
+            tournament_id: tournamentId,
+            athlete_id: row.matchedAthlete.id,
+            placement: row.placement,
+            points,
+            is_manual: false,
+            imported_at: new Date().toISOString(),
+          });
+          imported++;
+        }
       } catch (error) {
         errors.push(`Zeile ${row.rowIndex + 1}: ${error}`);
       }
@@ -366,7 +380,7 @@ export function useResults() {
     const refreshed = await getResults();
     setResults(refreshed);
 
-    return { imported, skipped, errors, duplicates };
+    return { imported, skipped, overwritten, errors, duplicates };
   }, []);
 
   // Export ranking to CSV

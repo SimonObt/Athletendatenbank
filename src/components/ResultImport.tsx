@@ -11,15 +11,17 @@ interface ResultImportProps {
   onClose: () => void;
   tournament: Tournament;
   athletes: Athlete[];
-  onImport: (rows: ParsedResultRow[], actions: Map<number, 'import' | 'skip' | 'create'>) => void;
-  existingResults: Array<{ athlete_id: string; placement: Placement }>;
+  onImport: (rows: ParsedResultRow[], actions: Map<number, 'import' | 'skip' | 'create' | 'overwrite'>) => void;
+  existingResults: Array<{ athlete_id: string; placement: Placement; result_id: string }>;
 }
 
 export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, existingResults }: ResultImportProps) {
   const [parsedRows, setParsedRows] = useState<ParsedResultRow[]>([]);
-  const [actions, setActions] = useState<Map<number, 'import' | 'skip' | 'create'>>(new Map());
+  const [actions, setActions] = useState<Map<number, 'import' | 'skip' | 'create' | 'overwrite'>>(new Map());
   const [step, setStep] = useState<'upload' | 'preview'>('upload');
   const [error, setError] = useState<string | null>(null);
+  const [skippedRows, setSkippedRows] = useState<{index: number; reason: string}[]>([]);
+  const [birthYearMismatches, setBirthYearMismatches] = useState<{row: ParsedResultRow; csvYear: number; athleteYear: number}[]>([]);
 
   if (!isOpen) return null;
 
@@ -28,6 +30,8 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
     if (!file) return;
 
     setError(null);
+    setSkippedRows([]);
+    setBirthYearMismatches([]);
     
     parse(file, {
       header: true,
@@ -36,13 +40,17 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
         try {
           const data = results.data as Record<string, string>[];
           const rows: ParsedResultRow[] = [];
-          const newActions = new Map<number, 'import' | 'skip' | 'create'>();
+          const newActions = new Map<number, 'import' | 'skip' | 'create' | 'overwrite'>();
+          const skipped: {index: number; reason: string}[] = [];
+          const mismatches: {row: ParsedResultRow; csvYear: number; athleteYear: number}[] = [];
 
           data.forEach((row, index) => {
             // Parse placement
             const placementValue = parseInt(row.Platz || row.Platzierung || '0');
             if (!isValidPlacement(placementValue)) {
-              return; // Skip invalid placements
+              // BUG-1 Fix: Track invalid placements
+              skipped.push({index, reason: `Ungültige Platzierung: ${placementValue}. Gültig sind: 1, 2, 3, 5, 7`});
+              return;
             }
 
             // Parse name
@@ -63,6 +71,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
             }
 
             if (!firstName && !lastName) {
+              skipped.push({index, reason: 'Fehlender Name'});
               return;
             }
 
@@ -87,6 +96,27 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
             // Check for duplicate result
             const hasDuplicate = athlete && existingResults.some(r => r.athlete_id === athlete.id);
 
+            // BUG-2 Fix: Check for birth year mismatch
+            if (athlete && birthYear && athlete.birth_year !== birthYear) {
+              mismatches.push({
+                row: {
+                  rowIndex: index,
+                  firstName,
+                  lastName,
+                  birthYear,
+                  club: row.Verein?.trim(),
+                  gender: row.Geschlecht?.trim(),
+                  placement: placementValue as Placement,
+                  matchedAthlete: athlete,
+                  matchStatus,
+                  matchConfidence: confidence,
+                  similarAthletes: similarAthletes.slice(0, 3),
+                },
+                csvYear: birthYear,
+                athleteYear: athlete.birth_year
+              });
+            }
+
             rows.push({
               rowIndex: index,
               firstName,
@@ -103,7 +133,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
 
             // Default action based on match status
             if (hasDuplicate) {
-              newActions.set(index, 'skip');
+              newActions.set(index, 'skip'); // BUG-3: Default to skip, but overwrite is now possible
             } else if (matchStatus === 'exact' || matchStatus === 'similar') {
               newActions.set(index, 'import');
             } else {
@@ -113,6 +143,8 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
 
           setParsedRows(rows);
           setActions(newActions);
+          setSkippedRows(skipped);
+          setBirthYearMismatches(mismatches);
           setStep('preview');
         } catch (err) {
           setError('Fehler beim Parsen der CSV-Datei: ' + (err as Error).message);
@@ -124,7 +156,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
     });
   }, [athletes, existingResults]);
 
-  const handleActionChange = (rowIndex: number, action: 'import' | 'skip' | 'create') => {
+  const handleActionChange = (rowIndex: number, action: 'import' | 'skip' | 'create' | 'overwrite') => {
     setActions(prev => {
       const newMap = new Map(prev);
       newMap.set(rowIndex, action);
@@ -161,25 +193,29 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
     setActions(new Map());
     setStep('upload');
     setError(null);
+    setSkippedRows([]);
+    setBirthYearMismatches([]);
     onClose();
   };
 
   const getStats = () => {
     let import_ = 0;
     let skip = 0;
+    let overwrite = 0;
     let unknown = 0;
     
     parsedRows.forEach(row => {
       const action = actions.get(row.rowIndex) || 'skip';
       if (action === 'import') import_++;
       else if (action === 'skip') skip++;
+      else if (action === 'overwrite') overwrite++;
       
       if (!row.matchedAthlete && action !== 'create') {
         unknown++;
       }
     });
     
-    return { import: import_, skip, unknown };
+    return { import: import_, skip, overwrite, unknown };
   };
 
   const stats = getStats();
@@ -289,11 +325,17 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">{parsedRows.length}</span> Ergebnisse gefunden
                 </div>
-                <div className="flex gap-4 text-sm">
+                <div className="flex gap-4 text-sm flex-wrap">
                   <span className="text-green-600">
                     <CheckCircle className="w-4 h-4 inline mr-1" />
                     Import: {stats.import}
                   </span>
+                  {stats.overwrite > 0 && (
+                    <span className="text-orange-600">
+                      <AlertCircle className="w-4 h-4 inline mr-1" />
+                      Überschreiben: {stats.overwrite}
+                    </span>
+                  )}
                   <span className="text-gray-600">
                     <XCircle className="w-4 h-4 inline mr-1" />
                     Übersprungen: {stats.skip}
@@ -301,15 +343,82 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                 </div>
               </div>
 
+              {skippedRows.length > 0 && (
+                <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-800 mb-2">
+                    <AlertCircle className="w-5 h-5" />
+                    <span className="font-medium">{skippedRows.length} Zeilen übersprungen</span>
+                  </div>
+                  <div className="text-sm text-red-700 max-h-32 overflow-y-auto">
+                    {skippedRows.map((skipped, idx) => (
+                      <div key={idx} className="mb-1">
+                        Zeile {skipped.index + 1}: {skipped.reason}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {birthYearMismatches.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 text-yellow-800 mb-2">
+                    <AlertCircle className="w-5 h-5" />
+                    <span className="font-medium">Abweichende Jahrgänge gefunden</span>
+                  </div>
+                  <p className="text-sm text-yellow-700 mb-2">
+                    Bei folgenden Athleten unterscheidet sich der Jahrgang in der CSV vom System:
+                  </p>
+                  <div className="text-sm text-yellow-700 max-h-32 overflow-y-auto">
+                    {birthYearMismatches.map((mismatch, idx) => (
+                      <div key={idx} className="mb-1">
+                        {mismatch.row.lastName}, {mismatch.row.firstName}: 
+                        CSV sagt {mismatch.csvYear}, System hat {mismatch.athleteYear}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {hasDuplicates && (
                 <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
                   <div className="flex items-center gap-2 text-orange-800 mb-2">
                     <AlertCircle className="w-5 h-5" />
                     <span className="font-medium">Doppelte Einträge gefunden</span>
                   </div>
-                  <p className="text-sm text-orange-700">
-                    Einige Athleten haben bereits ein Ergebnis für dieses Turnier. Diese werden standardmäßig übersprungen.
+                  <p className="text-sm text-orange-700 mb-2">
+                    Einige Athleten haben bereits ein Ergebnis für dieses Turnier. 
+                    Sie können überspringen oder das bestehende Ergebnis überschreiben.
                   </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        const newMap = new Map(actions);
+                        parsedRows.forEach(row => {
+                          if (row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id)) {
+                            newMap.set(row.rowIndex, 'skip');
+                          }
+                        });
+                        setActions(newMap);
+                      }}
+                      className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                    >
+                      Alle Duplikate überspringen
+                    </button>
+                    <button
+                      onClick={() => {
+                        const newMap = new Map(actions);
+                        parsedRows.forEach(row => {
+                          if (row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id)) {
+                            newMap.set(row.rowIndex, 'overwrite');
+                          }
+                        });
+                        setActions(newMap);
+                      }}
+                      className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200"
+                    >
+                      Alle Duplikate überschreiben
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -357,10 +466,10 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                   <tbody className="divide-y divide-gray-200">
                     {parsedRows.map((row) => {
                       const action = actions.get(row.rowIndex) || 'skip';
-                      const points = row.matchedAthlete && action === 'import' 
+                      const points = row.matchedAthlete && (action === 'import' || action === 'overwrite')
                         ? calculatePoints(row.placement, tournament)
                         : 0;
-                      
+
                       return (
                         <tr key={row.rowIndex} className={!row.matchedAthlete ? 'bg-red-50' : ''}>
                           <td className="px-3 py-2">
@@ -375,7 +484,7 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                           <td className="px-3 py-2">{row.club || '-'}</td>
                           <td className="px-3 py-2">{getPlacementLabel(row.placement)}</td>
                           <td className="px-3 py-2">
-                            {action === 'import' ? (
+                            {(action === 'import' || action === 'overwrite') ? (
                               <span className="font-medium text-green-600">{points}</span>
                             ) : (
                               <span className="text-gray-400">-</span>
@@ -390,13 +499,22 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                           <td className="px-3 py-2">
                             <select
                               value={action}
-                              onChange={(e) => handleActionChange(row.rowIndex, e.target.value as 'import' | 'skip' | 'create')}
+                              onChange={(e) => handleActionChange(row.rowIndex, e.target.value as 'import' | 'skip' | 'create' | 'overwrite')}
                               className="text-sm border border-gray-300 rounded px-2 py-1"
                             >
                               {row.matchedAthlete ? (
                                 <>
-                                  <option value="import">Importieren</option>
-                                  <option value="skip">Überspringen</option>
+                                  {existingResults.some(r => r.athlete_id === row.matchedAthlete!.id) ? (
+                                    <>
+                                      <option value="skip">Überspringen</option>
+                                      <option value="overwrite">Überschreiben</option>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <option value="import">Importieren</option>
+                                      <option value="skip">Überspringen</option>
+                                    </>
+                                  )}
                                 </>
                               ) : (
                                 <>
@@ -441,10 +559,10 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                 </button>
                 <button
                   onClick={handleImportAll}
-                  disabled={stats.import === 0}
+                  disabled={stats.import === 0 && stats.overwrite === 0}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  Importieren ({stats.import} Ergebnisse)
+                  Importieren ({stats.import + stats.overwrite} Ergebnisse)
                 </button>
               </div>
             </div>
