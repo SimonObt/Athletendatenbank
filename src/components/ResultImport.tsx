@@ -167,8 +167,6 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
   const [skippedRows, setSkippedRows] = useState<{index: number; reason: string}[]>([]);
   const [birthYearMismatches, setBirthYearMismatches] = useState<{row: ParsedResultRow; csvYear: number; athleteYear: number}[]>([]);
 
-  if (!isOpen) return null;
-
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -368,6 +366,11 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
     if (!row.matchedAthlete) return false;
     return existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
   });
+
+  // Early return after all hooks to maintain hook order consistency
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
