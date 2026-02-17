@@ -26,28 +26,24 @@ interface ActionSelectProps {
 function ActionSelect({ row, action, existingResults, onChange }: ActionSelectProps) {
   const hasExistingResult = row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
   
+  // Always render all options to keep React's virtual DOM consistent
+  // Use disabled to control which are selectable
   return (
     <select
       value={action}
       onChange={(e) => onChange(e.target.value as 'import' | 'skip' | 'create' | 'overwrite')}
       className="text-sm border border-slate-300 rounded px-2 py-1"
     >
-      {!row.matchedAthlete ? (
-        <>
-          <option value="skip">Überspringen</option>
-          <option value="create">Neu anlegen</option>
-        </>
-      ) : hasExistingResult ? (
-        <>
-          <option value="skip">Überspringen</option>
-          <option value="overwrite">Überschreiben</option>
-        </>
-      ) : (
-        <>
-          <option value="import">Importieren</option>
-          <option value="skip">Überspringen</option>
-        </>
-      )}
+      <option value="skip">Überspringen</option>
+      <option value="import" disabled={!row.matchedAthlete || hasExistingResult}>
+        {hasExistingResult ? 'Bereits vorhanden - kann nicht importieren' : 'Importieren'}
+      </option>
+      <option value="overwrite" disabled={!hasExistingResult}>
+        Überschreiben
+      </option>
+      <option value="create" disabled={!!row.matchedAthlete}>
+        Neu anlegen
+      </option>
     </select>
   );
 }
