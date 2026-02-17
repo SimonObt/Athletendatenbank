@@ -15,6 +15,76 @@ interface ResultImportProps {
   existingResults: Array<{ athlete_id: string; placement: Placement; result_id: string }>;
 }
 
+// Separate component for action select to avoid hook issues
+interface ActionSelectProps {
+  row: ParsedResultRow;
+  action: string;
+  existingResults: Array<{ athlete_id: string; placement: Placement; result_id: string }>;
+  onChange: (action: 'import' | 'skip' | 'create' | 'overwrite') => void;
+}
+
+function ActionSelect({ row, action, existingResults, onChange }: ActionSelectProps) {
+  const hasExistingResult = row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
+  
+  return (
+    <select
+      value={action}
+      onChange={(e) => onChange(e.target.value as 'import' | 'skip' | 'create' | 'overwrite')}
+      className="text-sm border border-slate-300 rounded px-2 py-1"
+    >
+      {!row.matchedAthlete ? (
+        <>
+          <option value="skip">Überspringen</option>
+          <option value="create">Neu anlegen</option>
+        </>
+      ) : hasExistingResult ? (
+        <>
+          <option value="skip">Überspringen</option>
+          <option value="overwrite">Überschreiben</option>
+        </>
+      ) : (
+        <>
+          <option value="import">Importieren</option>
+          <option value="skip">Überspringen</option>
+        </>
+      )}
+    </select>
+  );
+}
+
+// Separate component for similar athletes dropdown
+interface SimilarAthletesSelectProps {
+  row: ParsedResultRow;
+  athletes: Athlete[];
+  onSelect: (athlete: Athlete) => void;
+}
+
+function SimilarAthletesSelect({ row, athletes, onSelect }: SimilarAthletesSelectProps) {
+  if (!row.similarAthletes || row.similarAthletes.length === 0 || row.matchedAthlete) {
+    return null;
+  }
+  
+  return (
+    <div className="mt-1">
+      <select
+        onChange={(e) => {
+          const athlete = athletes.find(a => a.id === e.target.value);
+          if (athlete) onSelect(athlete);
+        }}
+        className="text-xs border border-slate-300 rounded px-2 py-1 w-full"
+        defaultValue=""
+      >
+        <option value="" disabled>Ähnlichen Athleten wählen...</option>
+        {row.similarAthletes.map(athlete => (
+          <option key={athlete.id} value={athlete.id}>
+            {athlete.last_name}, {athlete.first_name} ({athlete.birth_year})
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, existingResults }: ResultImportProps) {
   const [parsedRows, setParsedRows] = useState<ParsedResultRow[]>([]);
   const [actions, setActions] = useState<Map<number, 'import' | 'skip' | 'create' | 'overwrite'>>(new Map());
@@ -497,51 +567,17 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                             </div>
                           </td>
                           <td className="px-3 py-2">
-                            <select
-                              value={action}
-                              onChange={(e) => handleActionChange(row.rowIndex, e.target.value as 'import' | 'skip' | 'create' | 'overwrite')}
-                              className="text-sm border border-slate-300 rounded px-2 py-1"
-                            >
-                              {row.matchedAthlete ? (
-                                <>
-                                  {existingResults.some(r => r.athlete_id === row.matchedAthlete!.id) ? (
-                                    <>
-                                      <option value="skip">Überspringen</option>
-                                      <option value="overwrite">Überschreiben</option>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <option value="import">Importieren</option>
-                                      <option value="skip">Überspringen</option>
-                                    </>
-                                  )}
-                                </>
-                              ) : (
-                                <>
-                                  <option value="skip">Überspringen</option>
-                                  <option value="create">Neu anlegen</option>
-                                </>
-                              )}
-                            </select>
-                            {row.similarAthletes && row.similarAthletes.length > 0 && !row.matchedAthlete && (
-                              <div className="mt-1">
-                                <select
-                                  onChange={(e) => {
-                                    const athlete = athletes.find(a => a.id === e.target.value);
-                                    if (athlete) handleMatchAthlete(row.rowIndex, athlete);
-                                  }}
-                                  className="text-xs border border-slate-300 rounded px-2 py-1 w-full"
-                                  defaultValue=""
-                                >
-                                  <option value="" disabled>Ähnlichen Athleten wählen...</option>
-                                  {row.similarAthletes.map(athlete => (
-                                    <option key={athlete.id} value={athlete.id}>
-                                      {athlete.last_name}, {athlete.first_name} ({athlete.birth_year})
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            )}
+                            <ActionSelect 
+                              row={row} 
+                              action={action}
+                              existingResults={existingResults}
+                              onChange={(newAction) => handleActionChange(row.rowIndex, newAction)}
+                            />
+                            <SimilarAthletesSelect
+                              row={row}
+                              athletes={athletes}
+                              onSelect={(athlete) => handleMatchAthlete(row.rowIndex, athlete)}
+                            />
                           </td>
                         </tr>
                       );
