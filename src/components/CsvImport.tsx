@@ -64,13 +64,18 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
             }
 
             const genderLower = row.Geschlecht?.toLowerCase().trim();
-            if (!genderLower || (genderLower !== 'männlich' && genderLower !== 'weiblich' && genderLower !== 'divers')) {
+            // Akzeptiere m/w oder männlich/weiblich, konvertiere zu langform für API
+            let gender: 'männlich' | 'weiblich' | null = null;
+            if (genderLower === 'm' || genderLower === 'männlich' || genderLower === 'maennlich') {
+              gender = 'männlich';
+            } else if (genderLower === 'w' || genderLower === 'weiblich') {
+              gender = 'weiblich';
+            }
+            if (!gender) {
               skippedRows.push(index);
-              skippedReasons.set(index, 'Ungültiges Geschlecht: ' + (row.Geschlecht || 'leer'));
+              skippedReasons.set(index, 'Ungültiges Geschlecht: ' + (row.Geschlecht || 'leer') + ' (Erlaubt: m, w)');
               return;
             }
-            const gender = genderLower === 'weiblich' ? 'weiblich' : 
-                          genderLower === 'divers' ? 'divers' : 'männlich';
 
             const email = row.Email?.trim() || '';
             const phone = row.Telefon?.trim() || '';
@@ -220,7 +225,7 @@ export function CsvImport({ isOpen, onClose, existingAthletes, onImport }: CsvIm
                 <code className="block bg-slate-100 p-2 rounded mb-2">
                   Nachname,Vorname,Geschlecht,Jahrgang,Bezirk,Verein,Telefon,Email
                 </code>
-                <p className="mb-1"><strong>Pflichtfelder:</strong> Nachname, Vorname, Geschlecht (männlich/weiblich/divers), Jahrgang</p>
+                <p className="mb-1"><strong>Pflichtfelder:</strong> Nachname, Vorname, Geschlecht (m/w), Jahrgang</p>
                 <p className="mb-1"><strong>Jahrgang:</strong> 4-stellig (2008) oder 2-stellig (08 → 2008)</p>
                 <p className="text-yellow-600"><strong>Hinweis:</strong> Dubletten innerhalb der CSV werden automatisch übersprungen</p>
               </div>
