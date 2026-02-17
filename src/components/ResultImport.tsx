@@ -85,6 +85,84 @@ function SimilarAthletesSelect({ row, athletes, onSelect }: SimilarAthletesSelec
   );
 }
 
+// Separate component for table row to avoid hook issues
+interface ResultRowProps {
+  row: ParsedResultRow;
+  action: string;
+  tournament: Tournament;
+  existingResults: Array<{ athlete_id: string; placement: Placement; result_id: string }>;
+  athletes: Athlete[];
+  onActionChange: (action: 'import' | 'skip' | 'create' | 'overwrite') => void;
+  onMatchAthlete: (athlete: Athlete) => void;
+}
+
+function ResultRow({ row, action, tournament, existingResults, athletes, onActionChange, onMatchAthlete }: ResultRowProps) {
+  const points = row.matchedAthlete && (action === 'import' || action === 'overwrite')
+    ? calculatePoints(row.placement, tournament)
+    : 0;
+    
+  const hasDuplicate = row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
+  
+  let statusIcon;
+  let statusText;
+  
+  if (hasDuplicate) {
+    statusIcon = <XCircle className="w-5 h-5 text-orange-500" />;
+    statusText = 'Bereits vorhanden';
+  } else if (row.matchStatus === 'exact') {
+    statusIcon = <CheckCircle className="w-5 h-5 text-green-500" />;
+    statusText = 'Gefunden';
+  } else if (row.matchStatus === 'similar') {
+    statusIcon = <AlertCircle className="w-5 h-5 text-yellow-500" />;
+    statusText = `Ähnlich (${row.matchConfidence}%)`;
+  } else {
+    statusIcon = <XCircle className="w-5 h-5 text-red-500" />;
+    statusText = 'Unbekannt';
+  }
+
+  return (
+    <tr className={!row.matchedAthlete ? 'bg-red-50' : ''}>
+      <td className="px-3 py-2">
+        {row.lastName}, {row.firstName}
+        {row.matchedAthlete && (
+          <div className="text-xs text-green-600">
+            → {row.matchedAthlete.last_name}, {row.matchedAthlete.first_name}
+          </div>
+        )}
+      </td>
+      <td className="px-3 py-2">{row.birthYear || '-'}</td>
+      <td className="px-3 py-2">{row.club || '-'}</td>
+      <td className="px-3 py-2">{getPlacementLabel(row.placement)}</td>
+      <td className="px-3 py-2">
+        {(action === 'import' || action === 'overwrite') ? (
+          <span className="font-medium text-green-600">{points}</span>
+        ) : (
+          <span className="text-slate-400">-</span>
+        )}
+      </td>
+      <td className="px-3 py-2">
+        <div className="flex items-center gap-2">
+          {statusIcon}
+          <span className="text-xs">{statusText}</span>
+        </div>
+      </td>
+      <td className="px-3 py-2">
+        <ActionSelect 
+          row={row} 
+          action={action}
+          existingResults={existingResults}
+          onChange={onActionChange}
+        />
+        <SimilarAthletesSelect
+          row={row}
+          athletes={athletes}
+          onSelect={onMatchAthlete}
+        />
+      </td>
+    </tr>
+  );
+}
+
 export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, existingResults }: ResultImportProps) {
   const [parsedRows, setParsedRows] = useState<ParsedResultRow[]>([]);
   const [actions, setActions] = useState<Map<number, 'import' | 'skip' | 'create' | 'overwrite'>>(new Map());
@@ -295,38 +373,6 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
     return existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
   });
 
-  const getStatusIcon = (row: ParsedResultRow) => {
-    const hasDuplicate = row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
-    
-    if (hasDuplicate) {
-      return <XCircle className="w-5 h-5 text-orange-500" />;
-    }
-    switch (row.matchStatus) {
-      case 'exact':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'similar':
-        return <AlertCircle className="w-5 h-5 text-yellow-500" />;
-      default:
-        return <XCircle className="w-5 h-5 text-red-500" />;
-    }
-  };
-
-  const getStatusText = (row: ParsedResultRow) => {
-    const hasDuplicate = row.matchedAthlete && existingResults.some(r => r.athlete_id === row.matchedAthlete!.id);
-    
-    if (hasDuplicate) {
-      return 'Bereits vorhanden';
-    }
-    switch (row.matchStatus) {
-      case 'exact':
-        return 'Gefunden';
-      case 'similar':
-        return `Ähnlich (${row.matchConfidence}%)`;
-      default:
-        return 'Unbekannt';
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
@@ -534,54 +580,18 @@ export function ResultImport({ isOpen, onClose, tournament, athletes, onImport, 
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {parsedRows.map((row) => {
-                      const action = actions.get(row.rowIndex) || 'skip';
-                      const points = row.matchedAthlete && (action === 'import' || action === 'overwrite')
-                        ? calculatePoints(row.placement, tournament)
-                        : 0;
-
-                      return (
-                        <tr key={row.rowIndex} className={!row.matchedAthlete ? 'bg-red-50' : ''}>
-                          <td className="px-3 py-2">
-                            {row.lastName}, {row.firstName}
-                            {row.matchedAthlete && (
-                              <div className="text-xs text-green-600">
-                                → {row.matchedAthlete.last_name}, {row.matchedAthlete.first_name}
-                              </div>
-                            )}
-                          </td>
-                          <td className="px-3 py-2">{row.birthYear || '-'}</td>
-                          <td className="px-3 py-2">{row.club || '-'}</td>
-                          <td className="px-3 py-2">{getPlacementLabel(row.placement)}</td>
-                          <td className="px-3 py-2">
-                            {(action === 'import' || action === 'overwrite') ? (
-                              <span className="font-medium text-green-600">{points}</span>
-                            ) : (
-                              <span className="text-slate-400">-</span>
-                            )}
-                          </td>
-                          <td className="px-3 py-2">
-                            <div className="flex items-center gap-2">
-                              {getStatusIcon(row)}
-                              <span className="text-xs">{getStatusText(row)}</span>
-                            </div>
-                          </td>
-                          <td className="px-3 py-2">
-                            <ActionSelect 
-                              row={row} 
-                              action={action}
-                              existingResults={existingResults}
-                              onChange={(newAction) => handleActionChange(row.rowIndex, newAction)}
-                            />
-                            <SimilarAthletesSelect
-                              row={row}
-                              athletes={athletes}
-                              onSelect={(athlete) => handleMatchAthlete(row.rowIndex, athlete)}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {parsedRows.map((row) => (
+                      <ResultRow
+                        key={row.rowIndex}
+                        row={row}
+                        action={actions.get(row.rowIndex) || 'skip'}
+                        tournament={tournament}
+                        existingResults={existingResults}
+                        athletes={athletes}
+                        onActionChange={(newAction) => handleActionChange(row.rowIndex, newAction)}
+                        onMatchAthlete={(athlete) => handleMatchAthlete(row.rowIndex, athlete)}
+                      />
+                    ))}
                   </tbody>
                 </table>
               </div>
